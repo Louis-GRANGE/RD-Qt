@@ -10,19 +10,29 @@ CONFIG += c++11
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    GLDisplayWidget.cpp \
+    cinputcontroller.cpp \
+    cobject.cpp \
+    collision.cpp \
+    cplayer.cpp \
+    gldisplaywidget.cpp \
     cube.cpp \
     labyrinthe.cpp \
     main.cpp \
     mainwindow.cpp \
+    transform.cpp \
     room.cpp \
     wall.cpp
 
 HEADERS += \
     GLDisplayWidget.h \
+    cinputcontroller.h \
+    cobject.h \
+    collision.h \
+    cplayer.h \
+    mainwindow.h \
+    transform.h \
     cube.h \
     labyrinthe.h \
-    mainwindow.h \
     room.h \
     wall.h
 
