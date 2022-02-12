@@ -7,12 +7,17 @@
 #include <filesystem>
 #include "fstream"
 
+#include "cplayer.h"
+
 
 GLDisplayWidget::GLDisplayWidget(QWidget *parent) : QGLWidget(parent), _X(0), _Y(0), _Z(-10)
 {
     // Update the scene
     connect( &_timer, SIGNAL(timeout()), this, SLOT(updateGL()));
     _timer.start(16); // Starts or restarts the timer with a timeout interval of 16 milliseconds.
+
+    player = new CPlayer();
+    assets.push_back(player);
 }
 
 void GLDisplayWidget::initializeGL()
@@ -29,7 +34,6 @@ void GLDisplayWidget::initializeGL()
 }
 
 void GLDisplayWidget::paintGL(){
-
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // Center the camera
@@ -59,6 +63,36 @@ void GLDisplayWidget::paintGL(){
         glVertex3f(-0.5,0.8f,0);
         glVertex3f(0,0,0);
         glVertex3f(-1,0,0);
+    glEnd();
+
+    player->ActualizeTransform(player->inputController.KeyControl());
+
+    foreach(CObject* object, assets)
+    {       
+        draw(object->transform.position, object->drawObject.data);
+    }
+}
+
+void GLDisplayWidget::draw(QVector3D worldpos, modele data)
+{
+    for(int t = 0; t < data.triangles.size(); t += 3)
+    {
+        QVector3D pos1 = data.vertices[data.triangles[t] - 1];
+        QVector3D pos2 = data.vertices[data.triangles[t + 1] - 1];
+        QVector3D pos3 = data.vertices[data.triangles[t + 2] - 1];
+
+        drawTriangle(worldpos, pos1 , pos2, pos3, data.colors[0]);
+    }
+}
+
+void GLDisplayWidget::drawTriangle(QVector3D worldpos, QVector3D pos1, QVector3D pos2, QVector3D pos3, QVector3D color)
+{
+    glBegin(GL_TRIANGLES);
+        glColor3f(color.x(), color.y(), color.z());
+        glVertex3f(pos1.x() + worldpos.x(),pos1.y() + worldpos.y(),pos1.z() + worldpos.z());
+        glVertex3f(pos2.x()+ worldpos.x(),pos2.y() + worldpos.y(),pos2.z() + worldpos.z());
+        glVertex3f(pos3.x()+ worldpos.x(),pos3.y()+ worldpos.y(),pos3.z() + worldpos.z());
+        glVertex3f(pos1.x() + worldpos.x(),pos1.y() + worldpos.y(),pos1.z() + worldpos.z());
     glEnd();
 }
 

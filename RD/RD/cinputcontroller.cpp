@@ -6,24 +6,26 @@ CInputController::CInputController()
 
 }
 
-void CInputController::keyPressEvent(QKeyEvent *event)
+QVector3D CInputController::KeyControl()
 {
     newMovement = new QVector3D();
 
-    if(event->key() == Qt::Key_Z)
+    if(GetKeyState('Z') < 0)
     {
-        *newMovement += QVector3D(0,1,0);
+        *newMovement += QVector3D(0,0.3,0);
     }
-    else if(event->key() == Qt::Key_S)
+    else if(GetKeyState('S') < 0)
     {
-        *newMovement += QVector3D(0,-1,0);
+        *newMovement += QVector3D(0,-0.3,0);
     }
-    if(event->key() == Qt::Key_D)
+    if(GetKeyState('D') < 0)
     {
-        *newMovement += QVector3D(1,0,0);
+        *newMovement += QVector3D(0.3,0,0);
     }
-    else if(event->key() == Qt::Key_Q)
+    else if(GetKeyState('Q') < 0)
     {
-        *newMovement += QVector3D(-1,0,0);
+        *newMovement += QVector3D(-0.3,0,0);
     }
+
+    return *newMovement;
 }

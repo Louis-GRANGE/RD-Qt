@@ -10,6 +10,7 @@
 
 #include "cube.h"
 #include "labyrinthe.h"
+#include "cplayer.h"
 
 int main(int argc, char *argv[])
 {
@@ -29,6 +30,8 @@ int main(int argc, char *argv[])
     QGraphicsView * view = new QGraphicsView();
     Labyrinthe * laby = new Labyrinthe(view, QVector2D(5, 5));
 
+    /*QGraphicsView * view = new QGraphicsView();
+    Labyrinthe *laby = new Labyrinthe(view, QVector2D(20, 20));*/
 
     //DISPLAY Window
     w.show();
