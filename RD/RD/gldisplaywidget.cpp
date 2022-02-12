@@ -69,30 +69,33 @@ void GLDisplayWidget::paintGL(){
 
     foreach(CObject* object, assets)
     {       
-        draw(object->transform.position, object->drawObject.data);
+        draw(object->transform.position, object->transform.scale, object->transform.rotation ,object->drawObject.data);
     }
 }
 
-void GLDisplayWidget::draw(QVector3D worldpos, modele data)
+void GLDisplayWidget::draw(QVector3D worldpos, QVector3D scale, QQuaternion rotation, modele data)
 {
+    glTranslatef(worldpos.x(), worldpos.y(), worldpos.z());
+    glRotatef(rotation.x(),rotation.y(),rotation.z(),rotation.scalar());
+
     for(int t = 0; t < data.triangles.size(); t += 3)
     {
         QVector3D pos1 = data.vertices[data.triangles[t] - 1];
         QVector3D pos2 = data.vertices[data.triangles[t + 1] - 1];
         QVector3D pos3 = data.vertices[data.triangles[t + 2] - 1];
 
-        drawTriangle(worldpos, pos1 , pos2, pos3, data.colors[0]);
+        drawTriangle(worldpos, scale, rotation, pos1, pos2, pos3, data.colors[0]);
     }
 }
 
-void GLDisplayWidget::drawTriangle(QVector3D worldpos, QVector3D pos1, QVector3D pos2, QVector3D pos3, QVector3D color)
+void GLDisplayWidget::drawTriangle(QVector3D worldpos, QVector3D scale, QQuaternion rotation, QVector3D pos1, QVector3D pos2, QVector3D pos3, QVector3D color)
 {
     glBegin(GL_TRIANGLES);
         glColor3f(color.x(), color.y(), color.z());
-        glVertex3f(pos1.x() + worldpos.x(),pos1.y() + worldpos.y(),pos1.z() + worldpos.z());
-        glVertex3f(pos2.x()+ worldpos.x(),pos2.y() + worldpos.y(),pos2.z() + worldpos.z());
-        glVertex3f(pos3.x()+ worldpos.x(),pos3.y()+ worldpos.y(),pos3.z() + worldpos.z());
-        glVertex3f(pos1.x() + worldpos.x(),pos1.y() + worldpos.y(),pos1.z() + worldpos.z());
+        glVertex3f((pos1.x() * scale.x()),(pos1.y()* scale.y()),(pos1.z()* scale.z()));
+        glVertex3f((pos2.x() * scale.x()),(pos2.y()* scale.y()),(pos2.z()* scale.z()));
+        glVertex3f((pos3.x() * scale.x()),(pos3.y()* scale.y()),(pos3.z()* scale.z()));
+        glVertex3f((pos1.x() * scale.x()),(pos1.y()* scale.y()),(pos1.z()* scale.z()));
     glEnd();
 }
 

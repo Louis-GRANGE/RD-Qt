@@ -11,5 +11,5 @@ MazeGenerator::MazeGenerator(int _Width, int _Height, int _EntryPositionWidth, i
     Height = _Height;
     EntryPositionWidth = _EntryPositionWidth;
     ExitPositionWidth = _ExitPositionWidth;
-    Map = _Map;
+    //Map = _Map;
 }

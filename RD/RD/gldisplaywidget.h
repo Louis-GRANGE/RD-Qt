@@ -23,8 +23,8 @@ public:
     void resizeGL(int width, int height);
     CPlayer* player;
     QList<CObject*> assets;
-    void draw(QVector3D worldpos, modele data);
-    void drawTriangle(QVector3D worldpos, QVector3D pos1, QVector3D pos2, QVector3D pos3, QVector3D color);
+    void draw(QVector3D worldpos, QVector3D scale, QQuaternion rotation, modele data);
+    void drawTriangle(QVector3D worldpos, QVector3D scale, QQuaternion rotation, QVector3D pos1, QVector3D pos2, QVector3D pos3, QVector3D color);
 
 protected:
     // Mouse Management
