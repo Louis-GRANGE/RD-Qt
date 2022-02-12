@@ -4,6 +4,7 @@ QT      += opengl
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 CONFIG += c++11
+#CONFIG += console
 
 # You can make your code fail to compile if it uses deprecated APIs.
 # In order to do so, uncomment the following line.
@@ -15,16 +16,14 @@ SOURCES += \
     labyrinthe.cpp \
     main.cpp \
     mainwindow.cpp \
-    room.cpp \
-    wall.cpp
+    room.cpp
 
 HEADERS += \
     GLDisplayWidget.h \
     cube.h \
     labyrinthe.h \
     mainwindow.h \
-    room.h \
-    wall.h
+    room.h
 
 FORMS += \
     mainwindow.ui

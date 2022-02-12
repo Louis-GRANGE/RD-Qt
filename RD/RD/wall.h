@@ -8,7 +8,6 @@ class Wall
 {
 public:
     Wall();
-
-};
+    };
 
 #endif // WALL_H

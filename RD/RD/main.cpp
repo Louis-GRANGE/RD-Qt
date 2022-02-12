@@ -24,7 +24,7 @@ int main(int argc, char *argv[])
     label->setText("first line\nsecond line");
 */
     QGraphicsView * view = new QGraphicsView();
-    Labyrinthe *laby = new Labyrinthe(view, QVector2D(20, 20));
+    Labyrinthe * laby = new Labyrinthe(view, QVector2D(5, 5));
 
     //DISPLAY Window
     w.show();
