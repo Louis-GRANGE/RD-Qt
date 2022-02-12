@@ -1,6 +1,9 @@
 #include "mainwindow.h"
-
+#include <iostream>
 #include <QApplication>
+#include <QGraphicsScene>
+#include <QGraphicsRectItem>
+#include <QGraphicsView>
 
 #include <QLabel>
 #include <QVector3D>
