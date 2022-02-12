@@ -10,6 +10,7 @@
 
 #include "cube.h"
 #include "labyrinthe.h"
+#include "cplayer.h"
 
 int main(int argc, char *argv[])
 {
@@ -26,8 +27,8 @@ int main(int argc, char *argv[])
     QLabel *label = new QLabel(&w);
     label->setText("first line\nsecond line");
 */
-    QGraphicsView * view = new QGraphicsView();
-    Labyrinthe *laby = new Labyrinthe(view, QVector2D(20, 20));
+    /*QGraphicsView * view = new QGraphicsView();
+    Labyrinthe *laby = new Labyrinthe(view, QVector2D(20, 20));*/
 
     //DISPLAY Window
     w.show();

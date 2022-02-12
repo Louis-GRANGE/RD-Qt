@@ -6,7 +6,10 @@
                      // deprecated for module QtGui (classes QOpenGLxxx )
                      // and module widgets (QWidget, QGraphicsView).
 #include <QtWidgets>
+#include <QList>
 #include <QTimer>
+#include "cobject.h"
+#include "cplayer.h"
 
 class GLDisplayWidget : public QGLWidget
 {
@@ -18,6 +21,10 @@ public:
     void initializeGL();
     void paintGL(); // Display the scene Gl
     void resizeGL(int width, int height);
+    CPlayer* player;
+    QList<CObject*> assets;
+    void draw(QVector3D worldpos, modele data);
+    void drawTriangle(QVector3D worldpos, QVector3D pos1, QVector3D pos2, QVector3D pos3, QVector3D color);
 
 protected:
     // Mouse Management
