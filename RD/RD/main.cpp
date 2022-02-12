@@ -29,6 +29,7 @@ int main(int argc, char *argv[])
     QGraphicsView * view = new QGraphicsView();
     Labyrinthe * laby = new Labyrinthe(view, QVector2D(5, 5));
 
+
     //DISPLAY Window
     w.show();
     return a.exec();

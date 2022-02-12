@@ -20,7 +20,9 @@ SOURCES += \
     labyrinthe.cpp \
     main.cpp \
     mainwindow.cpp \
-    room.cpp
+    mazegenerator.cpp \
+    mazehandler.cpp \
+    room.cpp \
     transform.cpp \
     wall.cpp
 
@@ -31,11 +33,13 @@ HEADERS += \
     collision.h \
     cplayer.h \
     mainwindow.h \
+    mazegenerator.h \
+    mazehandler.h \
     transform.h \
     cube.h \
     labyrinthe.h \
     mainwindow.h \
-    room.h
+    room.h \
     wall.h
 
 FORMS += \
