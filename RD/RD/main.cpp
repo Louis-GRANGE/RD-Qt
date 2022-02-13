@@ -8,33 +8,25 @@
 #include <QLabel>
 #include <QVector3D>
 
-#include "cube.h"
 #include "labyrinthe.h"
 #include "cplayer.h"
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    //MainWindow w;
+    MainWindow w;
 
-/*    if (!QGLFormat::hasOpenGL())
-            qFatal("This system has no OpenGL support");
-    Cube cube;
-    cube.resize(300, 300);
-    cube.show();
-
+/*
     QVector3D * v3 = new QVector3D(1,2,3);
     QLabel *label = new QLabel(&w);
     label->setText("first line\nsecond line");
 */
     QGraphicsView * view = new QGraphicsView();
 
-    Labyrinthe * laby = new Labyrinthe(view, QVector2D(10, 20));
-
-    //QGraphicsView * view = new QGraphicsView();
-    //Labyrinthe *laby = new Labyrinthe(view, QVector2D(20, 20));
+    Labyrinthe * laby = new Labyrinthe(view, QVector2D(20, 20));
+    CPlayer * player = new CPlayer();
 
     //DISPLAY Window
-    //w.show();
+    w.show();
     return a.exec();
 }

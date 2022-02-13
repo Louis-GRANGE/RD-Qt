@@ -12,6 +12,9 @@ public:
     CInputController();
     QVector3D *newMovement;
     QVector3D KeyControl();
+
+    //Spawn New Player
+    void SpawnNewPlayer();
 };
 
 #endif // CINPUTCONTROLLER_H

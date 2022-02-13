@@ -3,12 +3,8 @@
 #include <QVector3D>
 #include <QVector>
 
-struct modele
-{
-    std::vector<QVector3D> vertices;
-    std::vector<int> triangles;
-    std::vector<QVector3D> colors;
-};
+//TO Draw Object
+#include "GLDisplayWidget.h"
 
 class cDrawObject
 {

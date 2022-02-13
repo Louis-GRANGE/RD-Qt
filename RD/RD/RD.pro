@@ -17,11 +17,11 @@ SOURCES += \
     collision.cpp \
     cplayer.cpp \
     gldisplaywidget.cpp \
-    cube.cpp \
     labyrinthe.cpp \
     main.cpp \
     mainwindow.cpp \
     room.cpp \
+    singleton.cpp \
     transform.cpp \
     wall.cpp
 
@@ -33,8 +33,8 @@ HEADERS += \
     collision.h \
     cplayer.h \
     mainwindow.h \
+    singleton.h \
     transform.h \
-    cube.h \
     labyrinthe.h \
     room.h \
     wall.h

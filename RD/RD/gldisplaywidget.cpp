@@ -15,9 +15,6 @@ GLDisplayWidget::GLDisplayWidget(QWidget *parent) : QGLWidget(parent), _X(0), _Y
     // Update the scene
     connect( &_timer, SIGNAL(timeout()), this, SLOT(updateGL()));
     _timer.start(16); // Starts or restarts the timer with a timeout interval of 16 milliseconds.
-
-    player = new CPlayer();
-    assets.push_back(player);
 }
 
 void GLDisplayWidget::initializeGL()
@@ -31,6 +28,12 @@ void GLDisplayWidget::initializeGL()
     glEnable(GL_COLOR_MATERIAL);
 
     fprintf(stderr, "initialisation du Gl\n");
+
+    //START Function of Object
+    foreach(CObject* object, Singleton<GLDisplayWidget>::getInstance().assets) //Never use JUSTE "assets" because it's a wrong access to the SINGLETON
+    {
+        object->Start();
+    }
 }
 
 void GLDisplayWidget::paintGL(){
@@ -65,20 +68,27 @@ void GLDisplayWidget::paintGL(){
         glVertex3f(-1,0,0);
     glEnd();
 
-    player->ActualizeTransform(player->inputController.KeyControl());
-
-    foreach(CObject* object, assets)
-    {       
-        draw(object->transform.position, object->transform.scale, object->transform.rotation ,object->drawObject.data);
+    //player->ActualizeTransform(player->inputController.KeyControl());
+    foreach(CObject* object, Singleton<GLDisplayWidget>::getInstance().assets) //Never use JUSTE "assets" because it's a wrong access to the SINGLETON
+    {
+        DrawByObject(object);
+        if(object->IsTickEnable)
+            object->Update();
     }
+}
+
+void GLDisplayWidget::DrawByObject(CObject* object)
+{
+    draw(object->transform.position, object->transform.scale, object->transform.rotation ,object->drawObject.data);
 }
 
 void GLDisplayWidget::draw(QVector3D worldpos, QVector3D scale, QQuaternion rotation, modele data)
 {
     glTranslatef(worldpos.x(), worldpos.y(), worldpos.z());
-    glRotatef(rotation.x(),rotation.y(),rotation.z(),rotation.scalar());
 
-    for(int t = 0; t < data.triangles.size(); t += 3)
+    glRotatef(rotation.x(),rotation.y(),rotation.z(), 1);
+
+    for(size_t t = 0; t < data.triangles.size(); t += 3)
     {
         QVector3D pos1 = data.vertices[data.triangles[t] - 1];
         QVector3D pos2 = data.vertices[data.triangles[t + 1] - 1];
@@ -86,6 +96,8 @@ void GLDisplayWidget::draw(QVector3D worldpos, QVector3D scale, QQuaternion rota
 
         drawTriangle(worldpos, scale, rotation, pos1, pos2, pos3, data.colors[0]);
     }
+    glRotatef(-rotation.x(),-rotation.y(),-rotation.z(), 0);
+    glTranslatef(-worldpos.x(), -worldpos.y(), -worldpos.z());
 }
 
 void GLDisplayWidget::drawTriangle(QVector3D worldpos, QVector3D scale, QQuaternion rotation, QVector3D pos1, QVector3D pos2, QVector3D pos3, QVector3D color)
@@ -141,4 +153,10 @@ void GLDisplayWidget::wheelEvent(QWheelEvent *event) {
     {
       _Z = (numDegrees.x() > 0 || numDegrees.y() > 0) ? _Z + stepZoom : _Z - stepZoom;
     }
+}
+
+void GLDisplayWidget::AddCObject(CObject* newobj)
+{
+    assets.push_back(newobj);
+    newobj->Start();
 }

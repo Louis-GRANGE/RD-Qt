@@ -1,16 +1,23 @@
 #ifndef ROOM_H
 #define ROOM_H
 
+#include "cobject.h"
+
 #include <QVector2D>
 #include <QGraphicsScene>
 #include <QGraphicsRectItem>
 #include <QGraphicsSimpleTextItem>
 
-class Room
+class Room : CObject
 {
 public:
     Room(QVector2D size, QVector2D position);
     void DrawRoom(QGraphicsScene *scene);
+
+    // 3D Edit mesh of CObject
+    void EditMeshRoom3D(QGraphicsScene *scene);
+    void EditMeshWallRoom3D(QVector2D p1,QVector2D p2, QGraphicsScene *scene, Qt::GlobalColor color);
+
     void DrawWall(QVector2D p1,QVector2D p2, QGraphicsScene *scene, Qt::GlobalColor color);
     int NumberOfWalls();
 

@@ -1,5 +1,6 @@
 #include "cinputcontroller.h"
 #include <QVector3D>
+#include "cplayer.h"
 
 CInputController::CInputController()
 {
@@ -28,4 +29,11 @@ QVector3D CInputController::KeyControl()
     }
 
     return *newMovement;
+}
+
+//MAYBE TO DELETE
+void CInputController::SpawnNewPlayer()
+{
+    if(GetKeyState('N') < 0)
+        new CPlayer();
 }

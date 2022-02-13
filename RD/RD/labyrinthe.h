@@ -5,6 +5,8 @@
 #include <QList>
 #include <QGraphicsView>
 
+#include <iostream>
+
 #include "room.h"
 enum direction
 {
@@ -40,6 +42,9 @@ public:
     void RemoveByDir(QVector2D pos, direction dir);
     std::vector<Room *> GetAllNextToRoom(QVector2D pos);
     Room *GetRoomAtPos(QVector2D pos);
+
+    //GET RANDOM
+    int GetRandomInRange(int min, int max);
 
     //to delete
     int* nbLoop = new int(0);

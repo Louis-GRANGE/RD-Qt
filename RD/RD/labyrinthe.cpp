@@ -1,10 +1,13 @@
 #include "labyrinthe.h"
-#include <iostream>
+#include <ctime>
 
 
 
 Labyrinthe::Labyrinthe(QGraphicsView * _view, QVector2D size)
 {
+    //Reload random seed with current time
+    srand((int) time(0));
+
     Size = size;
     view = _view;
     scene = new QGraphicsScene();
@@ -31,7 +34,8 @@ Labyrinthe::Labyrinthe(QGraphicsView * _view, QVector2D size)
     Current = MazeRooms[0][0];
     AddAllNextToUnVisitedRooms(Current, UnVisitedRooms);
     Current->IsVisited = true;
-    Room * tmp = UnVisitedRooms->at(rand() % UnVisitedRooms->size());
+
+    Room * tmp = UnVisitedRooms->at(GetRandomInRange(0, UnVisitedRooms->size()));
     for(size_t i = 0; i < UnVisitedRooms->size(); i++)
     {
         if(UnVisitedRooms->at(i) == tmp)
@@ -60,7 +64,7 @@ Labyrinthe::Labyrinthe(QGraphicsView * _view, QVector2D size)
 
 void Labyrinthe::VisitRoom(Room* Current, std::vector<Room*> *UnVisitedRooms)
 {    
-    std::cout << "Pos: " << Current->RelativePosition.x() << " " << Current->RelativePosition.y() << std::endl;
+    //std::cout << "Pos: " << Current->RelativePosition.x() << " " << Current->RelativePosition.y() << std::endl;
     Current->IsVisited = true;
     Maze.push_back(Current);
     AddAllNextToUnVisitedRooms(Current, UnVisitedRooms);
@@ -72,8 +76,9 @@ void Labyrinthe::VisitRoom(Room* Current, std::vector<Room*> *UnVisitedRooms)
     if(!UnVisitedRooms->empty())
     {
         *nbLoop = *nbLoop + 1;
-        std::cout << "->" << *nbLoop << std::endl;
-        Room* tmp = UnVisitedRooms->at(rand() % UnVisitedRooms->size());
+        //std::cout << "->" << *nbLoop << std::endl;
+
+        Room* tmp = UnVisitedRooms->at(GetRandomInRange(0, UnVisitedRooms->size()));
         RemoveBetweenWalls(tmp, GetRandomNextToVisitedRoom(tmp));
         for(size_t i = 0; i < UnVisitedRooms->size(); i++)
         {
@@ -160,13 +165,18 @@ Room* Labyrinthe::GetRandomNextToVisitedRoom(Room* current)
             lAllRooms.push_back(NextToRooms[i]);
     }
 
-    int index = rand()%lAllRooms.size();
+    int index = GetRandomInRange(0, lAllRooms.size());
     return lAllRooms[index];
 }
 
 Room* Labyrinthe::GetRoomAtPos(QVector2D pos)
 {
     return MazeRooms[pos.x()][pos.y()];
+}
+
+int Labyrinthe::GetRandomInRange(int min, int max)
+{
+    return rand() % max + min;
 }
 
 std::vector<Room*> Labyrinthe::GetAllNextToRoom(QVector2D pos)

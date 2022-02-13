@@ -7,6 +7,9 @@ CObject::CObject()
 {
     transform = Transform();
     drawObject = cDrawObject();
+
+    qDebug() << "Init: " << Singleton<GLDisplayWidget>::getInstance().assets.size();
+    Singleton<GLDisplayWidget>::getInstance().AddCObject(this);
 }
 
 modele CObject::getDataMesh(QString path)

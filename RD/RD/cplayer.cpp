@@ -1,9 +1,12 @@
 #include "cplayer.h"
-#include <QWidget>
 
 CPlayer::CPlayer()
 {
     inputController = CInputController();
+
+    //Active Update function
+    IsTickEnable = true;
+    //transform.rotation = {0, 45, 0, 0};
 
     /*std::vector<QVector3D> vertices = {
         QVector3D(-0.5,0.8,0),
@@ -16,11 +19,17 @@ CPlayer::CPlayer()
 
     drawObject.data = {vertices, triangles, colors};*/
 
-    drawObject.data = getDataMesh("D:/GitHub/RD-Qt/RD/Resources/Penico.obj");
+    drawObject.data = getDataMesh("D:/Documents/GitHub/RD-Qt/RD/Resources/Penico.obj");
 }
 
 void CPlayer::ActualizeTransform(QVector3D newMovement)
 {
     transform.Move(newMovement);
-    transform.Rotation(newMovement);
+    transform.Rotation(newMovement*10);
+}
+
+void CPlayer::Update()
+{
+    ActualizeTransform(inputController.KeyControl());
+    inputController.SpawnNewPlayer();
 }
