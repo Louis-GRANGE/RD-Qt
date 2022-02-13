@@ -6,7 +6,7 @@ CPlayer::CPlayer()
 
     //Active Update function
     IsTickEnable = true;
-    //transform.rotation = {0, 45, 0, 0};
+    transform.rotation = QVector3D(22,22,22);
 
     /*std::vector<QVector3D> vertices = {
         QVector3D(-0.5,0.8,0),
@@ -25,7 +25,7 @@ CPlayer::CPlayer()
 void CPlayer::ActualizeTransform(QVector3D newMovement)
 {
     transform.Move(newMovement);
-    transform.Rotation(newMovement*10);
+    //transform.Rotation(newMovement*10);
 }
 
 void CPlayer::Update()

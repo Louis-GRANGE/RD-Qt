@@ -10,7 +10,7 @@
 #include "cplayer.h"
 
 
-GLDisplayWidget::GLDisplayWidget(QWidget *parent) : QGLWidget(parent), _X(0), _Y(0), _Z(-10)
+GLDisplayWidget::GLDisplayWidget(QWidget *parent) : QGLWidget(parent), _X(0), _Y(0), _Z(-10), _RX(0), _RY(0), _RZ(0)
 {
     // Update the scene
     connect( &_timer, SIGNAL(timeout()), this, SLOT(updateGL()));
@@ -43,10 +43,15 @@ void GLDisplayWidget::paintGL(){
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
-    glTranslatef(0.0, 0.0, _Z);
+    glTranslatef(_X, _Y, _Z);
 
     // Rotation
-    //glRotatef(0.f, 90.0f, 0.0, 0.0f);
+        //glRotatef(qAcos(QVector3D::dotProduct(QVector3D(_X, _Y, _Z), QVector3D(_RX, _RY, _RX))/(QVector3D(_X, _Y, _Z).length()*QVector3D(_RX, _RY, _RX).length())), 0, 1, 0);
+        //glRotatef(_RX, 0, 1, 0);
+        //gluLookAt(_X,_Y,_Z,_X+_RX,_Y+_RY,_Z+_RZ,0,1,0);
+        glRotatef(yaw, 0,1,0);
+        glRotatef(pitch, 1,0,0);
+
 
     glBegin(GL_TRIANGLES);
         glColor3f(1, 0 ,0);
@@ -82,37 +87,47 @@ void GLDisplayWidget::DrawByObject(CObject* object)
     draw(object->transform.position, object->transform.scale, object->transform.rotation ,object->drawObject.data);
 }
 
-void GLDisplayWidget::draw(QVector3D worldpos, QVector3D scale, QQuaternion rotation, modele data)
+void GLDisplayWidget::draw(QVector3D worldpos, QVector3D scale, QVector3D rotation, modele data)
 {
-    glTranslatef(worldpos.x(), worldpos.y(), worldpos.z());
-
-    glRotatef(rotation.x(),rotation.y(),rotation.z(), 1);
-
     for(size_t t = 0; t < data.triangles.size(); t += 3)
     {
         QVector3D pos1 = data.vertices[data.triangles[t] - 1];
         QVector3D pos2 = data.vertices[data.triangles[t + 1] - 1];
         QVector3D pos3 = data.vertices[data.triangles[t + 2] - 1];
 
-        drawTriangle(worldpos, scale, rotation, pos1, pos2, pos3, data.colors[0]);
+        if(data.colors.size() >= data.triangles.size()/3)
+            drawTriangle(worldpos, scale, rotation, pos1, pos2, pos3, data.colors[t/3]);
+        else
+            drawTriangle(worldpos, scale, rotation, pos1, pos2, pos3, data.colors[0]);
     }
-    glRotatef(-rotation.x(),-rotation.y(),-rotation.z(), 0);
-    glTranslatef(-worldpos.x(), -worldpos.y(), -worldpos.z());
 }
 
-void GLDisplayWidget::drawTriangle(QVector3D worldpos, QVector3D scale, QQuaternion rotation, QVector3D pos1, QVector3D pos2, QVector3D pos3, QVector3D color)
+void GLDisplayWidget::drawTriangle(QVector3D worldpos, QVector3D scale, QVector3D rotation, QVector3D pos1, QVector3D pos2, QVector3D pos3, QVector3D color)
 {
+    //INIT Quaternion angle radiant by Euler Degree angle
+    QQuaternion MyQuaternion = {1, QVector3D(qDegreesToRadians(rotation.x()), qDegreesToRadians(rotation.y()), qDegreesToRadians(rotation.z()))};
+
+    //CHANGE point by rotation of the object
+    pos1 = MyQuaternion.rotatedVector(pos1);
+    pos2 = MyQuaternion.rotatedVector(pos2);
+    pos3 = MyQuaternion.rotatedVector(pos3);
+
+    //CHANGE Scale and WorldPosition
+    pos1 = pos1 * scale + worldpos;
+    pos2 = pos2 * scale + worldpos;
+    pos3 = pos3 * scale + worldpos;
+
     glBegin(GL_TRIANGLES);
         glColor3f(color.x(), color.y(), color.z());
-        glVertex3f((pos1.x() * scale.x()),(pos1.y()* scale.y()),(pos1.z()* scale.z()));
-        glVertex3f((pos2.x() * scale.x()),(pos2.y()* scale.y()),(pos2.z()* scale.z()));
-        glVertex3f((pos3.x() * scale.x()),(pos3.y()* scale.y()),(pos3.z()* scale.z()));
-        glVertex3f((pos1.x() * scale.x()),(pos1.y()* scale.y()),(pos1.z()* scale.z()));
+        glVertex3f((pos1.x()),(pos1.y()),(pos1.z()));
+        glVertex3f((pos2.x()),(pos2.y()),(pos2.z()));
+        glVertex3f((pos3.x()),(pos3.y()),(pos3.z()));
+        glVertex3f((pos1.x()),(pos1.y()),(pos1.z()));
     glEnd();
 }
 
-void GLDisplayWidget::resizeGL(int width, int height){
-
+void GLDisplayWidget::resizeGL(int width, int height)
+{
     glViewport(0, 0, width, height); //Viewport in the world window
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
@@ -140,7 +155,27 @@ void GLDisplayWidget::mouseMoveEvent(QMouseEvent *event)
 
     if( event != NULL )
     {
+        //_RX += dx;
+        //_RZ += dy;
+        float sensitivity = 0.1f;
+        dx *= sensitivity;
+        dy *= sensitivity;
+
+        yaw   += dy;
+        pitch += dx;
+
+        if(pitch > 89.0f)
+            pitch = 89.0f;
+        if(pitch < -89.0f)
+            pitch = -89.0f;
+
+        _RX = qRadiansToDegrees(cos(qDegreesToRadians(yaw)) * cos(qDegreesToRadians(pitch)));
+        _RY = qRadiansToDegrees(sin(qDegreesToRadians(pitch)));
+        _RZ = qRadiansToDegrees(sin(qDegreesToRadians(yaw)) * cos(qDegreesToRadians(pitch)));
         // Do stuff
+        //_X = _X + dx / 100;
+        //_Y = _Y + dy / 100;
+
         updateGL();
     }
 }

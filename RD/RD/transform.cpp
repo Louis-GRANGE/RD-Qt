@@ -2,7 +2,7 @@
 
 Transform::Transform()
 {
-
+    //rotation = QQuaternion(0,45,0,1);
 }
 
 void Transform::Move(QVector3D direction)
@@ -12,5 +12,5 @@ void Transform::Move(QVector3D direction)
 
 void Transform::Rotation(QVector3D direction)
 {
-    rotation = QQuaternion(direction.x(), direction.y(), direction.z(), 0);
+    rotation = QVector3D(direction.x(), direction.y(), direction.z());
 }

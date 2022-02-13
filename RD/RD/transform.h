@@ -10,7 +10,7 @@ public:
     void Move(QVector3D direction);
     void Rotation(QVector3D direction);
     QVector3D position = {0, 0, 0};
-    QQuaternion rotation;// = {0, 0, 0, 0};
+    QVector3D rotation;// = {0, 0, 0, 0};
     QVector3D scale = {1, 1, 1};
 };
 

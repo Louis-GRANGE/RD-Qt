@@ -9,6 +9,8 @@
 #include <QtWidgets>
 #include <QList>
 #include <QTimer>
+//#include <QtMath>
+#include "qmath.h"
 #include "singleton.h"
 //#include "cobject.h"
 class CObject;
@@ -33,8 +35,8 @@ public:
     QList<CObject*> assets;
 
     //DRAWING
-    void draw(QVector3D worldpos, QVector3D scale, QQuaternion rotation, modele data);
-    void drawTriangle(QVector3D worldpos, QVector3D scale, QQuaternion rotation, QVector3D pos1, QVector3D pos2, QVector3D pos3, QVector3D color);
+    void draw(QVector3D worldpos, QVector3D scale, QVector3D rotation, modele data);
+    void drawTriangle(QVector3D worldpos, QVector3D scale, QVector3D rotation, QVector3D pos1, QVector3D pos2, QVector3D pos3, QVector3D color);
     void DrawByObject(CObject* object);
 
 protected:
@@ -47,6 +49,8 @@ private:
 
     QTimer _timer; // To update the scene
     float _X, _Y ,_Z; // Translation
+    float _RX, _RY, _RZ; //Rotation
+    float pitch, yaw;
 
     QPoint _lastPosMouse; // To keep the last position of the mouse
 
