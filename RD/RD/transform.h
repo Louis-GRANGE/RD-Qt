@@ -1,6 +1,7 @@
 #ifndef TRANSFORM_H
 #define TRANSFORM_H
 #include <QVector3D>
+#include <QQuaternion>
 
 class Transform
 {
@@ -9,7 +10,8 @@ public:
     void Move(QVector3D direction);
     void Rotation(QVector3D direction);
     QVector3D position;
-    QVector3D rotation;
+    QQuaternion rotation;
+    QVector3D scale;
 };
 
 #endif // TRANSFORM_H
