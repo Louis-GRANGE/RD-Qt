@@ -15,7 +15,7 @@
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    MainWindow w;
+    //MainWindow w;
 
 /*    if (!QGLFormat::hasOpenGL())
             qFatal("This system has no OpenGL support");
@@ -28,12 +28,13 @@ int main(int argc, char *argv[])
     label->setText("first line\nsecond line");
 */
     QGraphicsView * view = new QGraphicsView();
-    Labyrinthe * laby = new Labyrinthe(view, QVector2D(5, 5));
 
-    /*QGraphicsView * view = new QGraphicsView();
-    Labyrinthe *laby = new Labyrinthe(view, QVector2D(20, 20));*/
+    Labyrinthe * laby = new Labyrinthe(view, QVector2D(10, 20));
+
+    //QGraphicsView * view = new QGraphicsView();
+    //Labyrinthe *laby = new Labyrinthe(view, QVector2D(20, 20));
 
     //DISPLAY Window
-    w.show();
+    //w.show();
     return a.exec();
 }

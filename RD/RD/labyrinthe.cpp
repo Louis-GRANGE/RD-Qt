@@ -1,251 +1,199 @@
 #include "labyrinthe.h"
 #include <iostream>
 
-#define NORTH 0
-#define EAST 1
-#define SOUTH 2
-#define WEST 3
 
-Labyrinthe::Labyrinthe(QGraphicsView * view, QVector2D size)
+
+Labyrinthe::Labyrinthe(QGraphicsView * _view, QVector2D size)
 {
     Size = size;
+    view = _view;
+    scene = new QGraphicsScene();
     //lRoom = new QList<Room>();
     QVector2D RoomSizeInit = QVector2D(25, 25);
-    QGraphicsScene * scene = new QGraphicsScene();
 
     Room* Current;
 
-    for(int x = 0; x <= Size.x(); x++)
+
+    //INIT ARRAY OF ARRAY
+    for(int x = 0; x < Size.x(); x++)
     {
-        for(int y = 0; y <= Size.y(); y++)
+        std::vector<Room*> tmp = std::vector<Room*>(Size.y());
+        MazeRooms.push_back(tmp);
+        for(int y = 0; y < Size.y(); y++)
         {
             Room* tmp = new Room(QVector2D(RoomSizeInit.x(), RoomSizeInit.y()), QVector2D(x, y));
-            //tmp.DrawRoom(scene);
-            vRooms.push_back(tmp);
+            MazeRooms[x][y] = tmp;
+        }
+    }
+    //-------------------
+
+    std::vector<Room*>* UnVisitedRooms = new std::vector<Room*>();
+    Current = MazeRooms[0][0];
+    AddAllNextToUnVisitedRooms(Current, UnVisitedRooms);
+    Current->IsVisited = true;
+    Room * tmp = UnVisitedRooms->at(rand() % UnVisitedRooms->size());
+    for(size_t i = 0; i < UnVisitedRooms->size(); i++)
+    {
+        if(UnVisitedRooms->at(i) == tmp)
+            UnVisitedRooms->erase(UnVisitedRooms->begin() + i);
+    }
+    RemoveBetweenWalls(Current, tmp);
+    Current = tmp;
+
+    //Recursivity to visit all Rooms
+    VisitRoom(Current, UnVisitedRooms);
+
+
+    // TO DRAW ALL ROOMS
+    for(int x = 0; x < Size.x(); x++)
+    {
+        for(int y = 0; y < Size.y(); y++)
+        {
+            MazeRooms[x][y]->DrawRoom(scene);
         }
     }
 
-    Current = vRooms[Size.x()+1];//Size.x()*Size.y() / 2];
-    std::vector<Room*> tmpRoom;
-    /*foreach(Room* tmp, vRooms)
-    {
-        tmpRoom.push_back(tmp);
-    }*/
-
-    //Recursivity to visit all Rooms
-    VisitRoom(Current, &tmpRoom);
-    //Visit(Current->RelativePosition);
-    foreach(Room* tmp, vRooms)
-    {
-        tmp->DrawRoom(scene);
-    }
     view = new QGraphicsView(scene);
     view->show();
 }
 
 
-void Labyrinthe::VisitRoom(Room* Current, std::vector<Room*>* tmpRoom)
-{
-    Room* Destination;
-
-    //if(tmpRoom->size() >= ((Size.x()-1)*(Size.y()-1) - 50))
-    //    return;
-
-    if(HaveNextToRoomWithAllWalls(Current))
+void Labyrinthe::VisitRoom(Room* Current, std::vector<Room*> *UnVisitedRooms)
+{    
+    std::cout << "Pos: " << Current->RelativePosition.x() << " " << Current->RelativePosition.y() << std::endl;
+    Current->IsVisited = true;
+    Maze.push_back(Current);
+    AddAllNextToUnVisitedRooms(Current, UnVisitedRooms);
+    for(size_t i = 0; i < UnVisitedRooms->size(); i++)
     {
-        Destination = GetRandomNextToRoomNoVisited(Current);
-
-        RemoveBetweenWalls(Current, Destination);
-        std::cout << "PrevPos: " << Current->RelativePosition.x() << "," << Current->RelativePosition.y() << std::endl;
-
-        tmpRoom->push_back(Destination);
-        VisitRoom(Destination, tmpRoom);
+        if(UnVisitedRooms->at(i) == Current)
+            UnVisitedRooms->erase(UnVisitedRooms->begin() + i);
     }
-    else
+    if(!UnVisitedRooms->empty())
     {
-        Destination = GetRandomNextToRoom(Current);
-        VisitRoom(Destination, tmpRoom);
-        //return;
-    }
-
-}
-
-
-// This is the recursive function we will code in the next project
-void Labyrinthe::Visit(QVector2D pos)
-{
-    // Starting at the given index, recursively visits every direction in a
-    // randomized order.
-    // Set my current location to be an empty passage.
-    GetRoomAt(pos)->IsVisited = true;
-    // Create an local array containing the 4 directions and shuffle their order.
-    int dirs[4];
-    dirs[0] = NORTH;
-    dirs[1] = EAST;
-    dirs[2] = SOUTH;
-    dirs[3] = WEST;
-    for (int i=0; i<4; ++i)
-    {
-        int r = rand() & 3;
-        int temp = dirs[r];
-        dirs[r] = dirs[i];
-        dirs[i] = temp;
-    }
-    // Loop through every direction and attempt to Visit that direction.
-    for (int i=0; i<4; ++i)
-    {
-        // dx,dy are offsets from current location. Set them based
-        // on the next direction I wish to try.
-        int dx=0, dy=0;
-        switch (dirs[i])
+        *nbLoop = *nbLoop + 1;
+        std::cout << "->" << *nbLoop << std::endl;
+        Room* tmp = UnVisitedRooms->at(rand() % UnVisitedRooms->size());
+        RemoveBetweenWalls(tmp, GetRandomNextToVisitedRoom(tmp));
+        for(size_t i = 0; i < UnVisitedRooms->size(); i++)
         {
-        case NORTH: dy = -1; break;
-        case SOUTH: dy = 1; break;
-        case EAST: dx = 1; break;
-        case WEST: dx = -1; break;
+            if(UnVisitedRooms->at(i) == tmp)
+                UnVisitedRooms->erase(UnVisitedRooms->begin() + i);
         }
-        // Find the (x,y) coordinates of the grid cell 2 spots
-        // away in the given direction.
-        int x2 = pos.x() + (dx<<1);
-        int y2 = pos.y() + (dy<<1);
-        if (IsInBounds(QVector2D(x2,y2)))
-        {
-            if (!GetRoomAt(QVector2D(x2,y2))->IsVisited)
-            {
-                // (x2,y2) has not been visited yet... knock down the
-                // wall between my current position and that position
-                RemoveBetweenWalls(GetRoomAt(pos), GetRoomAt(QVector2D(x2,y2)));
-                //GetRoomAt(QVector2D(x2-dx,y2-dy))->IsVisited = true;
-                GetRoomAt(QVector2D(x2,y2))->IsVisited = true;
-                // Recursively Visit (x2,y2)
-                Visit(QVector2D(x2,y2));
-            }
-        }
+        VisitRoom(tmp, UnVisitedRooms);
     }
-}
-
-int Labyrinthe::IsInBounds(QVector2D pos)
-{
-    // Returns "true" if x and y are both in-bounds.
-    if (pos.x() < 0 || pos.x() >= Size.x()) return false;
-    if (pos.y() < 0 || pos.y() >= Size.y()) return false;
-    return true;
-}
-
-Room* Labyrinthe::GetRoomAt(QVector2D pos)
-{
-    if((pos.x() + pos.y() * Size.y()) < vRooms.size())
-        return vRooms[pos.x() * (Size.x()+1) + pos.y()]; //INDEX OUT OF RANGE
-    else
-        return nullptr;
-}
-
-Room* Labyrinthe::GetUpRoom(Room* current)
-{
-    if(current->RelativePosition.y() <= 0)
-        return nullptr;
-    else
-        return GetRoomAt(QVector2D(current->RelativePosition.x(), current->RelativePosition.y() - 1));
-}
-Room* Labyrinthe::GetDownRoom(Room* current)
-{
-    if(current->RelativePosition.y() >= Size.y())
-        return nullptr;
-    else
-        return GetRoomAt(QVector2D(current->RelativePosition.x(), current->RelativePosition.y() + 1));
-}
-Room* Labyrinthe::GetRightRoom(Room* current)
-{
-    if(current->RelativePosition.x() >= Size.x())
-        return nullptr;
-    else
-        return GetRoomAt(QVector2D(current->RelativePosition.x() + 1, current->RelativePosition.y()));
-}
-Room* Labyrinthe::GetLeftRoom(Room* current)
-{
-    if(current->RelativePosition.x() <= 0)
-        return nullptr;
-    else
-        return GetRoomAt(QVector2D(current->RelativePosition.x() - 1, current->RelativePosition.y()));
-}
-
-bool Labyrinthe::HaveNextToRoomWithAllWalls(Room* current)
-{
-    if (GetUpRoom(current) != nullptr && GetUpRoom(current)->NumberOfWalls() == 4)
-        return true;
-    if (GetDownRoom(current) != nullptr && GetDownRoom(current)->NumberOfWalls() == 4)
-        return true;
-    if (GetRightRoom(current) != nullptr && GetRightRoom(current)->NumberOfWalls() == 4)
-        return true;
-    if (GetLeftRoom(current) != nullptr && GetLeftRoom(current)->NumberOfWalls() == 4)
-        return true;
-
-    return false;
-}
-
-Room* Labyrinthe::GetRandomNextToRoomNoVisited(Room* current)
-{
-    std::vector<Room*> lAllWallsRoom = std::vector<Room*>();
-    if (GetUpRoom(current) != nullptr && GetUpRoom(current)->NumberOfWalls() >= 4) //4
-        lAllWallsRoom.push_back(GetUpRoom(current));
-    if (GetDownRoom(current) != nullptr && GetDownRoom(current)->NumberOfWalls() >= 4) //4
-        lAllWallsRoom.push_back(GetDownRoom(current));
-    if (GetRightRoom(current) != nullptr && GetRightRoom(current)->NumberOfWalls() >= 4) //4
-        lAllWallsRoom.push_back(GetRightRoom(current));
-    if (GetLeftRoom(current) != nullptr && GetLeftRoom(current)->NumberOfWalls() >= 4) //4
-        lAllWallsRoom.push_back(GetLeftRoom(current));
-
-    int index = rand()%(lAllWallsRoom.size());
-
-
-    if(lAllWallsRoom[index] == nullptr)
-        return nullptr;
-
-    return lAllWallsRoom[index];
-}
-
-Room* Labyrinthe::GetRandomNextToRoom(Room* current)
-{
-    std::vector<Room*> lAllWallsRoom = std::vector<Room*>();
-    if (GetUpRoom(current) != nullptr)
-        lAllWallsRoom.push_back(GetUpRoom(current));
-    if (GetDownRoom(current) != nullptr)
-        lAllWallsRoom.push_back(GetDownRoom(current));
-    if (GetRightRoom(current) != nullptr)
-        lAllWallsRoom.push_back(GetRightRoom(current));
-    if (GetLeftRoom(current) != nullptr)
-        lAllWallsRoom.push_back(GetLeftRoom(current));
-
-    int index = rand()%(lAllWallsRoom.size()-1);
-
-
-    if(lAllWallsRoom[index] == nullptr)
-        return nullptr;
-
-    return lAllWallsRoom[index];
 }
 
 
 void Labyrinthe::RemoveBetweenWalls(Room* current, Room* dest)
 {
-    if (GetUpRoom(current)!= nullptr && GetUpRoom(current) == dest)
+    RemoveByDir(current->RelativePosition, GetDirection(current->RelativePosition, dest->RelativePosition));
+}
+
+
+void Labyrinthe::AddAllNextToUnVisitedRooms(Room* Current, std::vector<Room*> *UnVisitedRooms)
+{
+    std::vector<Room*> tmpRooms = GetAllNextToRoomNoVisited(Current);
+    for(size_t i = 0; i < tmpRooms.size(); i++)
     {
-        current->HaveWallUP = false;
-        dest->HaveWallDOWN = false;
+        UnVisitedRooms->push_back(tmpRooms[i]);
     }
-    if (GetDownRoom(current)!= nullptr && GetDownRoom(current) == dest)
+}
+
+
+direction Labyrinthe::GetDirection(QVector2D pos1, QVector2D pos2)
+{
+    if(pos1.x() > pos2.x())
+        return WEST;
+    if(pos1.x() < pos2.x())
+        return EAST;
+    if(pos1.y() > pos2.y())
+        return NORTH;
+    if(pos1.y() < pos2.y())
+        return SOUTH;
+
+    return NONE;
+}
+void Labyrinthe::RemoveByDir(QVector2D pos, direction dir)
+{
+    switch (dir)
     {
-        current->HaveWallDOWN = false;
-        dest->HaveWallUP = false;
+        case NORTH:
+        {
+            MazeRooms[pos.x()][pos.y()]->HaveWallUP = false;
+            MazeRooms[pos.x()][pos.y() - 1]->HaveWallDOWN = false;
+            break;
+        }
+        case SOUTH:
+        {
+            MazeRooms[pos.x()][pos.y()]->HaveWallDOWN = false;
+            MazeRooms[pos.x()][pos.y() + 1]->HaveWallUP = false;
+            break;
+        }
+        case WEST:
+        {
+            MazeRooms[pos.x()][pos.y()]->HaveWallLEFT = false;
+            MazeRooms[pos.x() - 1][pos.y()]->HaveWallRIGHT = false;
+            break;
+        }
+        case EAST:
+        {
+            MazeRooms[pos.x()][pos.y()]->HaveWallRIGHT = false;
+            MazeRooms[pos.x() + 1][pos.y()]->HaveWallLEFT = false;
+            break;
+        }
+        case NONE:
+        {
+
+        }
     }
-    if (GetRightRoom(current)!= nullptr && GetRightRoom(current) == dest)
+}
+
+Room* Labyrinthe::GetRandomNextToVisitedRoom(Room* current)
+{
+    std::vector<Room*> lAllRooms = std::vector<Room*>();
+    std::vector<Room*> NextToRooms = GetAllNextToRoom(current->RelativePosition);
+
+    for(size_t i = 0; i < NextToRooms.size(); i++)
     {
-        current->HaveWallRIGHT = false;
-        dest->HaveWallLEFT = false;
+        if(NextToRooms[i]->IsVisited)
+            lAllRooms.push_back(NextToRooms[i]);
     }
-    if (GetLeftRoom(current)!= nullptr && GetLeftRoom(current) == dest)
+
+    int index = rand()%lAllRooms.size();
+    return lAllRooms[index];
+}
+
+Room* Labyrinthe::GetRoomAtPos(QVector2D pos)
+{
+    return MazeRooms[pos.x()][pos.y()];
+}
+
+std::vector<Room*> Labyrinthe::GetAllNextToRoom(QVector2D pos)
+{
+    std::vector<Room*> lAllRooms = std::vector<Room*>();
+
+    if(pos.x() > 0)
+        lAllRooms.push_back(MazeRooms[pos.x()-1][pos.y()]);
+    if(pos.x() < Size.x()-1)
+        lAllRooms.push_back(MazeRooms[pos.x()+1][pos.y()]);
+    if(pos.y() > 0)
+        lAllRooms.push_back(MazeRooms[pos.x()][pos.y()-1]);
+    if(pos.y() < Size.y()-1)
+        lAllRooms.push_back(MazeRooms[pos.x()][pos.y()+1]);
+
+    return lAllRooms;
+}
+std::vector<Room*> Labyrinthe::GetAllNextToRoomNoVisited(Room* current)
+{
+    std::vector<Room*> lAllRooms = std::vector<Room*>();
+    std::vector<Room*> NextToRooms = GetAllNextToRoom(current->RelativePosition);
+
+    for(size_t i = 0; i < NextToRooms.size(); i++)
     {
-        current->HaveWallLEFT = false;
-        dest->HaveWallRIGHT = false;
+        if(!NextToRooms[i]->IsVisited)
+            lAllRooms.push_back(NextToRooms[i]);
     }
+
+    return lAllRooms;
 }
