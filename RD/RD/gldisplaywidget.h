@@ -10,8 +10,11 @@
 #include <QList>
 #include <QTimer>
 //#include <QtMath>
+
+#include "camera.h"
 #include "qmath.h"
 #include "singleton.h"
+
 //#include "cobject.h"
 class CObject;
 struct modele
@@ -33,6 +36,7 @@ public:
     void resizeGL(int width, int height);
 
     QList<CObject*> assets;
+    Camera* Cam; //Camera Transformation
 
     //DRAWING
     void draw(QVector3D worldpos, QVector3D scale, QVector3D rotation, modele data);
@@ -48,9 +52,6 @@ protected:
 private:
 
     QTimer _timer; // To update the scene
-    float _X, _Y ,_Z; // Translation
-    float _RX, _RY, _RZ; //Rotation
-    float pitch, yaw;
 
     QPoint _lastPosMouse; // To keep the last position of the mouse
 

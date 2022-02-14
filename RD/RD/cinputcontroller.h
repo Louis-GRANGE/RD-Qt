@@ -4,6 +4,10 @@
 #include <Windows.h>
 #include "iostream"
 
+//#include "cplayer.h"
+
+
+class CPlayer;
 using namespace std;
 
 class CInputController
@@ -15,6 +19,9 @@ public:
 
     //Spawn New Player
     void SpawnNewPlayer();
+
+    //Change View
+    void ToggleView(CPlayer* ref);
 };
 
 #endif // CINPUTCONTROLLER_H

@@ -37,3 +37,9 @@ void CInputController::SpawnNewPlayer()
     if(GetKeyState('N') < 0)
         new CPlayer();
 }
+
+void CInputController::ToggleView(CPlayer* ref)
+{
+    if(GetKeyState('C') < 0)
+        ref->Camera->transform.position = ref->transform.position;
+}

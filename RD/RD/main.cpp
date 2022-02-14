@@ -10,10 +10,12 @@
 
 #include "labyrinthe.h"
 #include "cplayer.h"
+#include "camera.h"
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
+
     MainWindow w;
 
 /*
@@ -24,7 +26,11 @@ int main(int argc, char *argv[])
     QGraphicsView * view = new QGraphicsView();
 
     Labyrinthe * laby = new Labyrinthe(view, QVector2D(20, 20));
-    CPlayer * player = new CPlayer();
+
+    Camera* Cam = new Camera();
+    Singleton<GLDisplayWidget>::getInstance().Cam = Cam;
+
+    CPlayer * player = new CPlayer(Cam);
 
     //DISPLAY Window
     w.show();

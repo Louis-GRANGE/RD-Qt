@@ -10,11 +10,13 @@
 #include "cplayer.h"
 
 
-GLDisplayWidget::GLDisplayWidget(QWidget *parent) : QGLWidget(parent), _X(0), _Y(0), _Z(-10), _RX(0), _RY(0), _RZ(0)
+GLDisplayWidget::GLDisplayWidget(QWidget *parent) : QGLWidget(parent)//, _X(0), _Y(0), _Z(-10), _RX(0), _RY(0), _RZ(0)
 {
     // Update the scene
     connect( &_timer, SIGNAL(timeout()), this, SLOT(updateGL()));
     _timer.start(16); // Starts or restarts the timer with a timeout interval of 16 milliseconds.
+
+    Cam = new Camera();
 }
 
 void GLDisplayWidget::initializeGL()
@@ -43,15 +45,11 @@ void GLDisplayWidget::paintGL(){
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
-    glTranslatef(_X, _Y, _Z);
-
     // Rotation
-        //glRotatef(qAcos(QVector3D::dotProduct(QVector3D(_X, _Y, _Z), QVector3D(_RX, _RY, _RX))/(QVector3D(_X, _Y, _Z).length()*QVector3D(_RX, _RY, _RX).length())), 0, 1, 0);
-        //glRotatef(_RX, 0, 1, 0);
-        //gluLookAt(_X,_Y,_Z,_X+_RX,_Y+_RY,_Z+_RZ,0,1,0);
-        glRotatef(yaw, 0,1,0);
-        glRotatef(pitch, 1,0,0);
+        glRotatef(Cam->transform.rotation.y(), 0, 1, 0);
 
+    //Translation
+        glTranslatef(Cam->transform.position.x(), Cam->transform.position.y(), Cam->transform.position.z());
 
     glBegin(GL_TRIANGLES);
         glColor3f(1, 0 ,0);
@@ -155,26 +153,15 @@ void GLDisplayWidget::mouseMoveEvent(QMouseEvent *event)
 
     if( event != NULL )
     {
-        //_RX += dx;
-        //_RZ += dy;
         float sensitivity = 0.1f;
         dx *= sensitivity;
         dy *= sensitivity;
 
-        yaw   += dy;
-        pitch += dx;
+        //float yaw = Camera->rotation.x() + dy;
+        float pitch = Cam->transform.rotation.y() + dx;
 
-        if(pitch > 89.0f)
-            pitch = 89.0f;
-        if(pitch < -89.0f)
-            pitch = -89.0f;
-
-        _RX = qRadiansToDegrees(cos(qDegreesToRadians(yaw)) * cos(qDegreesToRadians(pitch)));
-        _RY = qRadiansToDegrees(sin(qDegreesToRadians(pitch)));
-        _RZ = qRadiansToDegrees(sin(qDegreesToRadians(yaw)) * cos(qDegreesToRadians(pitch)));
-        // Do stuff
-        //_X = _X + dx / 100;
-        //_Y = _Y + dy / 100;
+        //Camera->rotation.setX(yaw);
+        Cam->transform.rotation.setY(pitch);
 
         updateGL();
     }
@@ -183,10 +170,10 @@ void GLDisplayWidget::mouseMoveEvent(QMouseEvent *event)
 // Mouse Management for the zoom (for instance)
 void GLDisplayWidget::wheelEvent(QWheelEvent *event) {
     QPoint numDegrees = event->angleDelta();
-    double stepZoom = 0.25;
+    double stepZoom = (numDegrees.x() > 0 || numDegrees.y() > 0) ? 0.25f : - 0.25f;
     if (!numDegrees.isNull())
     {
-      _Z = (numDegrees.x() > 0 || numDegrees.y() > 0) ? _Z + stepZoom : _Z - stepZoom;
+        Cam->transform.position = Cam->transform.position + Cam->transform.forward() * stepZoom * 100;
     }
 }
 
