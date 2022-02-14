@@ -10,7 +10,7 @@ public:
     CPlayer();
     CPlayer(Camera* cam);
     CInputController inputController;
-    Camera* Camera;
+    Camera* PlayerCamera;
 
     void ActualizeTransform(QVector3D newMovement);
 

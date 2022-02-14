@@ -6,18 +6,17 @@ CPlayer::CPlayer()
 
     //Active Update function
     IsTickEnable = true;
-    transform.rotation = QVector3D(22,22,22);
 }
-/*
+
 CPlayer::CPlayer(Camera* cam)
 {
-    Camera = cam;
+    PlayerCamera = cam;
     inputController = CInputController();
+
 
     //Active Update function
     IsTickEnable = true;
-    transform.rotation = QVector3D(22,22,22);
-*/
+
     /*std::vector<QVector3D> vertices = {
         QVector3D(-0.5,0.8,0),
         QVector3D(0,1.6,0),
@@ -28,19 +27,21 @@ CPlayer::CPlayer(Camera* cam)
     std::vector<QVector3D> colors = {QVector3D(0.5,0.8,0)};
 
     drawObject.data = {vertices, triangles, colors};*/
-/*
+
     drawObject.data = getDataMesh("D:/Documents/GitHub/RD-Qt/RD/Resources/Penico.obj");
-}*/
+}
 
 void CPlayer::ActualizeTransform(QVector3D newMovement)
 {
     transform.Move(newMovement);
-    //transform.Rotation(newMovement*10);
+    PlayerCamera->transform.position = transform.position + PlayerCamera->Offset.position;
+
+    PlayerCamera->transform.rotation = transform.rotation + PlayerCamera->Offset.rotation;
 }
 
 void CPlayer::Update()
 {
-    ActualizeTransform(inputController.KeyControl());
+    ActualizeTransform(inputController.KeyControl(this));
     inputController.SpawnNewPlayer();
     inputController.ToggleView(this);
 }

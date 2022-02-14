@@ -6,7 +6,6 @@
 #include <iostream>
 #include <filesystem>
 #include "fstream"
-
 #include "cplayer.h"
 
 
@@ -16,7 +15,7 @@ GLDisplayWidget::GLDisplayWidget(QWidget *parent) : QGLWidget(parent)//, _X(0), 
     connect( &_timer, SIGNAL(timeout()), this, SLOT(updateGL()));
     _timer.start(16); // Starts or restarts the timer with a timeout interval of 16 milliseconds.
 
-    Cam = new Camera();
+    //Singleton<GLDisplayWidget>::getInstance().MainPlayer->PlayerCamera = new Camera();
 }
 
 void GLDisplayWidget::initializeGL()
@@ -46,10 +45,12 @@ void GLDisplayWidget::paintGL(){
     glLoadIdentity();
 
     // Rotation
-        glRotatef(Cam->transform.rotation.y(), 0, 1, 0);
+
+        qDebug() << "CAM X POS   : " << Singleton<GLDisplayWidget>::getInstance().MainPlayer->PlayerCamera->transform.position.x();
+        glRotatef(Singleton<GLDisplayWidget>::getInstance().MainPlayer->PlayerCamera->transform.rotation.y(), 0, 1, 0);
 
     //Translation
-        glTranslatef(Cam->transform.position.x(), Cam->transform.position.y(), Cam->transform.position.z());
+        glTranslatef(Singleton<GLDisplayWidget>::getInstance().MainPlayer->PlayerCamera->transform.position.x() * -1, Singleton<GLDisplayWidget>::getInstance().MainPlayer->PlayerCamera->transform.position.y() * -1, Singleton<GLDisplayWidget>::getInstance().MainPlayer->PlayerCamera->transform.position.z() * -1);
 
     glBegin(GL_TRIANGLES);
         glColor3f(1, 0 ,0);
@@ -103,7 +104,7 @@ void GLDisplayWidget::draw(QVector3D worldpos, QVector3D scale, QVector3D rotati
 void GLDisplayWidget::drawTriangle(QVector3D worldpos, QVector3D scale, QVector3D rotation, QVector3D pos1, QVector3D pos2, QVector3D pos3, QVector3D color)
 {
     //INIT Quaternion angle radiant by Euler Degree angle
-    QQuaternion MyQuaternion = {1, QVector3D(qDegreesToRadians(rotation.x()), qDegreesToRadians(rotation.y()), qDegreesToRadians(rotation.z()))};
+    QQuaternion MyQuaternion = {1, QVector3D(qDegreesToRadians(rotation.x()), qDegreesToRadians(rotation.y()), qDegreesToRadians(rotation.z())).normalized()};
 
     //CHANGE point by rotation of the object
     pos1 = MyQuaternion.rotatedVector(pos1);
@@ -153,15 +154,15 @@ void GLDisplayWidget::mouseMoveEvent(QMouseEvent *event)
 
     if( event != NULL )
     {
-        float sensitivity = 0.1f;
+        float sensitivity = 0.01f;
         dx *= sensitivity;
         dy *= sensitivity;
 
         //float yaw = Camera->rotation.x() + dy;
-        float pitch = Cam->transform.rotation.y() + dx;
+        float pitch = Singleton<GLDisplayWidget>::getInstance().MainPlayer->transform.rotation.y() + dx;
 
         //Camera->rotation.setX(yaw);
-        Cam->transform.rotation.setY(pitch);
+        Singleton<GLDisplayWidget>::getInstance().MainPlayer->transform.rotation.setY(pitch);
 
         updateGL();
     }
@@ -173,7 +174,8 @@ void GLDisplayWidget::wheelEvent(QWheelEvent *event) {
     double stepZoom = (numDegrees.x() > 0 || numDegrees.y() > 0) ? 0.25f : - 0.25f;
     if (!numDegrees.isNull())
     {
-        Cam->transform.position = Cam->transform.position + Cam->transform.forward() * stepZoom * 100;
+        Singleton<GLDisplayWidget>::getInstance().MainPlayer->transform.position = Singleton<GLDisplayWidget>::getInstance().MainPlayer->transform.position + Singleton<GLDisplayWidget>::getInstance().MainPlayer->transform.forward() * stepZoom * 100;
+        //Singleton<GLDisplayWidget>::getInstance().MainPlayer->PlayerCamera->transform.position = Singleton<GLDisplayWidget>::getInstance().MainPlayer->PlayerCamera->transform.position + Singleton<GLDisplayWidget>::getInstance().MainPlayer->PlayerCamera->transform.forward() * stepZoom * -100;
     }
 }
 

@@ -5,6 +5,12 @@ Transform::Transform()
     //rotation = QQuaternion(0,45,0,1);
 }
 
+Transform::Transform(QVector3D pos, QVector3D rot)
+{
+    position = pos;
+    rotation = rot;
+}
+
 void Transform::Move(QVector3D direction)
 {
     position += direction;
@@ -17,8 +23,8 @@ void Transform::Rotation(QVector3D direction)
 
 QVector3D Transform::forward()
 {
-    float x = -sin(qDegreesToRadians(rotation.y()));
-    float z = cos(qDegreesToRadians(rotation.y()));
+    float x = sin(qDegreesToRadians(rotation.y()));
+    float z = -cos(qDegreesToRadians(rotation.y()));
 
     return QVector3D{x,0,z};
 }

@@ -28,9 +28,9 @@ int main(int argc, char *argv[])
     Labyrinthe * laby = new Labyrinthe(view, QVector2D(20, 20));
 
     Camera* Cam = new Camera();
-    Singleton<GLDisplayWidget>::getInstance().Cam = Cam;
-
     CPlayer * player = new CPlayer(Cam);
+    Singleton<GLDisplayWidget>::getInstance().MainPlayer = player;
+
 
     //DISPLAY Window
     w.show();

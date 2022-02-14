@@ -11,12 +11,14 @@
 #include <QTimer>
 //#include <QtMath>
 
-#include "camera.h"
+//#include "cplayer.h"
 #include "qmath.h"
 #include "singleton.h"
 
 //#include "cobject.h"
 class CObject;
+class CPlayer;
+
 struct modele
 {
     std::vector<QVector3D> vertices;
@@ -36,7 +38,7 @@ public:
     void resizeGL(int width, int height);
 
     QList<CObject*> assets;
-    Camera* Cam; //Camera Transformation
+    CPlayer *MainPlayer; //Player Ref
 
     //DRAWING
     void draw(QVector3D worldpos, QVector3D scale, QVector3D rotation, modele data);

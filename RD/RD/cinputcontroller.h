@@ -15,7 +15,7 @@ class CInputController
 public:
     CInputController();
     QVector3D *newMovement;
-    QVector3D KeyControl();
+    QVector3D KeyControl(CPlayer* ref);
 
     //Spawn New Player
     void SpawnNewPlayer();
