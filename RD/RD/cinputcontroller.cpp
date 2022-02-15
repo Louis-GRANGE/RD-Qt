@@ -41,5 +41,10 @@ void CInputController::SpawnNewPlayer()
 void CInputController::ToggleView(CPlayer* ref)
 {
     if(GetKeyState('C') < 0)
+    {
         ref->PlayerCamera->ToggleView();
+
+        if(ref->PlayerCamera->IsTopView)
+            ref->transform.rotation.setY(90);
+    }
 }

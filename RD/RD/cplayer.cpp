@@ -36,7 +36,7 @@ void CPlayer::ActualizeTransform(QVector3D newMovement)
     transform.Move(newMovement);
     PlayerCamera->transform.position = transform.position + PlayerCamera->Offset.position;
 
-    PlayerCamera->transform.rotation = transform.rotation + PlayerCamera->Offset.rotation;
+    PlayerCamera->transform.rotation = PlayerCamera->IsTopView ? PlayerCamera->Offset.rotation : transform.rotation + PlayerCamera->Offset.rotation;
 }
 
 void CPlayer::Update()

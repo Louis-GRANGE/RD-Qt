@@ -48,6 +48,8 @@ void GLDisplayWidget::paintGL(){
 
         qDebug() << "CAM X POS   : " << Singleton<GLDisplayWidget>::getInstance().MainPlayer->PlayerCamera->transform.position.x();
         glRotatef(Singleton<GLDisplayWidget>::getInstance().MainPlayer->PlayerCamera->transform.rotation.y(), 0, 1, 0);
+        glRotatef(Singleton<GLDisplayWidget>::getInstance().MainPlayer->PlayerCamera->transform.rotation.x(), 1, 0, 0);
+        glRotatef(Singleton<GLDisplayWidget>::getInstance().MainPlayer->PlayerCamera->transform.rotation.z(), 0, 0, 1);
 
     //Translation
         glTranslatef(Singleton<GLDisplayWidget>::getInstance().MainPlayer->PlayerCamera->transform.position.x() * -1, Singleton<GLDisplayWidget>::getInstance().MainPlayer->PlayerCamera->transform.position.y() * -1, Singleton<GLDisplayWidget>::getInstance().MainPlayer->PlayerCamera->transform.position.z() * -1);
@@ -152,17 +154,20 @@ void GLDisplayWidget::mouseMoveEvent(QMouseEvent *event)
     int dx = event->x() - _lastPosMouse.x();
     int dy = event->y() - _lastPosMouse.y();
 
-    if( event != NULL )
+    if( event != NULL)
     {
         float sensitivity = 0.01f;
         dx *= sensitivity;
         dy *= sensitivity;
 
-        //float yaw = Camera->rotation.x() + dy;
-        float pitch = Singleton<GLDisplayWidget>::getInstance().MainPlayer->transform.rotation.y() + dx;
+        if(!Singleton<GLDisplayWidget>::getInstance().MainPlayer->PlayerCamera->IsTopView)
+        {
+            //float yaw = Camera->rotation.x() + dy;
+            float pitch = Singleton<GLDisplayWidget>::getInstance().MainPlayer->transform.rotation.y() + dx;
 
-        //Camera->rotation.setX(yaw);
-        Singleton<GLDisplayWidget>::getInstance().MainPlayer->transform.rotation.setY(pitch);
+            //Camera->rotation.setX(yaw);
+            Singleton<GLDisplayWidget>::getInstance().MainPlayer->transform.rotation.setY(pitch);
+        }
 
         updateGL();
     }

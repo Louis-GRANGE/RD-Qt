@@ -7,9 +7,9 @@ Camera::Camera()
 
 void Camera::ToggleView()
 {
-    Is3DView = !Is3DView;
+    IsTopView = !IsTopView;
 
-    if(Is3DView)
+    if(IsTopView)
         Offset = TopViewOffset;
     else
         Offset = FPSViewOffset;
