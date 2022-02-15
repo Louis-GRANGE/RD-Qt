@@ -2,8 +2,8 @@
 
 Collectable::Collectable()
 {
-    transform.scale = QVector3D(0.1f,0.1f,0.1f);
-    drawObject.data = getDataMesh("Cube.obj");
+    //transform.scale = QVector3D(0.1f,0.1f,0.1f);
+    drawObject.data = getDataMesh("Penico.obj");
     drawObject.data.colors = {{1,0,0}};
 
     collision = Collision();

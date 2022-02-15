@@ -12,19 +12,17 @@
 #include "cinputcontroller.h"
 
 
-GLDisplayWidget::GLDisplayWidget(QWidget *parent) : QGLWidget(parent)//, _X(0), _Y(0), _Z(-10), _RX(0), _RY(0), _RZ(0)
+GLDisplayWidget::GLDisplayWidget(QWidget *parent) : QGLWidget(parent)
 {
     // Update the scene
     connect( &_timer, SIGNAL(timeout()), this, SLOT(updateGL()));
     _timer.start(16); // Starts or restarts the timer with a timeout interval of 16 milliseconds.
-
-    //Singleton<GLDisplayWidget>::getInstance().MainPlayer->PlayerCamera = new Camera();
 }
 
 void GLDisplayWidget::initializeGL()
 {
     // background color
-    glClearColor(0.07, 0.04, 0.02, 1);
+    glClearColor(0.01, 0.17, 0.23, 1);
 
     // Shader
     glEnable(GL_DEPTH_TEST);
@@ -38,11 +36,6 @@ void GLDisplayWidget::initializeGL()
     {
         object->Start();
     }
-
-    // 2D collision tests
-    testcollision mytest = testcollision();
-    CInputController mytestcontroller = CInputController();
-    //qDebug() << mytest.SquareMultiLineIntersect(QVector2D(-1,-1),QVector2D(1,1));
 }
 
 void GLDisplayWidget::paintGL(){
@@ -82,31 +75,27 @@ void GLDisplayWidget::paintGL(){
         glVertex3f(-1,0,0);
     glEnd();
 
-    //player->ActualizeTransform(player->inputController.KeyControl());
+
     foreach(CObject* object, Singleton<GLDisplayWidget>::getInstance().assets) //Never use JUSTE "assets" because it's a wrong access to the SINGLETON
     {
         bool collided = false;
         if(object->collision.myCollisionType == CollisionType::Dynamic)
         {
             QVector3D movementToVerify = Singleton<GLDisplayWidget>::getInstance().MainPlayer->inputController.KeyControl(Singleton<GLDisplayWidget>::getInstance().MainPlayer);
-            //foreach(CObject* targetObject, Singleton<GLDisplayWidget>::getInstance().assets)
             for(int i = 0; i < Singleton<GLDisplayWidget>::getInstance().assets.size(); i++)
             {
                 CObject* targetObject = Singleton<GLDisplayWidget>::getInstance().assets[i];
                 if(targetObject != object && object->collision.checkCollision(movementToVerify,
                                              targetObject->collision,
                                              QVector2D(object->transform.position.x() + movementToVerify.x(), object->transform.position.z() + movementToVerify.z()),
-                                             QVector2D(targetObject->transform.position.x(), targetObject->transform.position.z()))){
+                                             QVector2D(targetObject->transform.position.x(), targetObject->transform.position.z())))
+                {
                     if(targetObject->collision.myCollisionType != CollisionType::Trigger)
                         collided = true;
                     else
-                    {
                         Singleton<GLDisplayWidget>::getInstance().assets.erase(Singleton<GLDisplayWidget>::getInstance().assets.begin() + i);
-                    }
-
                 }
             }
-            //qDebug() << movementToVerify;
         }
 
         DrawByObject(object);
@@ -209,7 +198,6 @@ void GLDisplayWidget::wheelEvent(QWheelEvent *event) {
     if (!numDegrees.isNull())
     {
         Singleton<GLDisplayWidget>::getInstance().MainPlayer->transform.position = Singleton<GLDisplayWidget>::getInstance().MainPlayer->transform.position + Singleton<GLDisplayWidget>::getInstance().MainPlayer->transform.forward() * stepZoom * 100;
-        //Singleton<GLDisplayWidget>::getInstance().MainPlayer->PlayerCamera->transform.position = Singleton<GLDisplayWidget>::getInstance().MainPlayer->PlayerCamera->transform.position + Singleton<GLDisplayWidget>::getInstance().MainPlayer->PlayerCamera->transform.forward() * stepZoom * -100;
     }
 }
 

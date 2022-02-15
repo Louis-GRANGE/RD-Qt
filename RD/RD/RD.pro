@@ -26,6 +26,7 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     room.cpp \
+    scenemanager.cpp \
     singleton.cpp \
     testcollision.cpp \
     transform.cpp \
@@ -43,6 +44,7 @@ HEADERS += \
     cplayer.h \
     linecollision.h \
     mainwindow.h \
+    scenemanager.h \
     singleton.h \
     testcollision.h \
     transform.h \

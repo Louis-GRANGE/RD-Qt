@@ -23,12 +23,12 @@ Room::Room(QVector2D size, QVector2D position)
     };
     std::vector<int> triangles = {1, 2, 4, 1, 4, 3};
 
-    std::vector<QVector3D> colors = {QVector3D(1,0.8,0), QVector3D(1,0.8,0)};
+    std::vector<QVector3D> colors = {GroundColor, GroundColor};
 
     drawObject.data = {vertices, triangles, colors};
 
 
-    if(rand() % 3 == 0)
+    if(rand() % 6 == 0)
     {
         Collectable* col = new Collectable();
         col->transform.position = transform.position + QVector3D(0,2,0);
@@ -39,31 +39,27 @@ void Room::DrawRoom(QGraphicsScene *scene)
 {
     if(HaveWallUP)
     {
-        DrawWall(QVector2D(WorldPosition.x()-Size.x()/2, WorldPosition.y()-Size.y()/2), QVector2D(WorldPosition.x()+Size.x()/2, WorldPosition.y()-Size.y()/2), scene, Qt::green);
         drawObject.data.triangles.insert(drawObject.data.triangles.end(), {5,6,2,5,2,1});
-        drawObject.data.colors.insert(drawObject.data.colors.end(), {0,1,0}); // Green Color
-        drawObject.data.colors.insert(drawObject.data.colors.end(), {0,1,0}); // Green Color
+        drawObject.data.colors.insert(drawObject.data.colors.end(), WallsColor);
+        drawObject.data.colors.insert(drawObject.data.colors.end(), WallsColor);
     }
     if(HaveWallLEFT)
     {
-        DrawWall(QVector2D(WorldPosition.x()-Size.x()/2, WorldPosition.y()-Size.y()/2), QVector2D(WorldPosition.x()-Size.x()/2, WorldPosition.y()+Size.y()/2), scene, Qt::blue);
         drawObject.data.triangles.insert(drawObject.data.triangles.end(), {5,7,1,7,3,1});
-        drawObject.data.colors.insert(drawObject.data.colors.end(), {0,0,1}); // Blue Color
-        drawObject.data.colors.insert(drawObject.data.colors.end(), {0,0,1}); // Blue Color
+        drawObject.data.colors.insert(drawObject.data.colors.end(), WallsColor);
+        drawObject.data.colors.insert(drawObject.data.colors.end(), WallsColor);
     }
     if(HaveWallRIGHT)
     {
-        DrawWall(QVector2D(WorldPosition.x()+Size.x()/2, WorldPosition.y()-Size.y()/2), QVector2D(WorldPosition.x()+Size.x()/2, WorldPosition.y()+Size.y()/2), scene, Qt::darkBlue);
         drawObject.data.triangles.insert(drawObject.data.triangles.end(), {6,4,8,6,2,4});
-        drawObject.data.colors.insert(drawObject.data.colors.end(), {0,0,1}); // Blue Color
-        drawObject.data.colors.insert(drawObject.data.colors.end(), {0,0,1}); // Blue Color
+        drawObject.data.colors.insert(drawObject.data.colors.end(), WallsColor);
+        drawObject.data.colors.insert(drawObject.data.colors.end(), WallsColor);
     }
     if(HaveWallDOWN)
     {
-        DrawWall(QVector2D(WorldPosition.x()-Size.x()/2, WorldPosition.y()+Size.y()/2), QVector2D(WorldPosition.x()+Size.x()/2, WorldPosition.y()+Size.y()/2), scene, Qt::darkGreen);
         drawObject.data.triangles.insert(drawObject.data.triangles.end(), {7,8,4,7,4,3});
-        drawObject.data.colors.insert(drawObject.data.colors.end(), {0,1,0}); // Green Color
-        drawObject.data.colors.insert(drawObject.data.colors.end(), {0,1,0}); // Green Color
+        drawObject.data.colors.insert(drawObject.data.colors.end(), WallsColor);
+        drawObject.data.colors.insert(drawObject.data.colors.end(), WallsColor);
     }
 
 
@@ -83,6 +79,31 @@ void Room::DrawRoom(QGraphicsScene *scene)
     InitColliders();
 }
 
+void Room::DrawRoom2D(QGraphicsScene *scene)
+{
+    if(!Is2DDraw)
+    {
+        if(HaveWallUP)
+        {
+            DrawWall(QVector2D(WorldPosition.x()-Size.x()/2, WorldPosition.y()-Size.y()/2), QVector2D(WorldPosition.x()+Size.x()/2, WorldPosition.y()-Size.y()/2), scene, WallsColor);
+        }
+        if(HaveWallLEFT)
+        {
+            DrawWall(QVector2D(WorldPosition.x()-Size.x()/2, WorldPosition.y()-Size.y()/2), QVector2D(WorldPosition.x()-Size.x()/2, WorldPosition.y()+Size.y()/2), scene, WallsColor);
+        }
+        if(HaveWallRIGHT)
+        {
+            DrawWall(QVector2D(WorldPosition.x()+Size.x()/2, WorldPosition.y()-Size.y()/2), QVector2D(WorldPosition.x()+Size.x()/2, WorldPosition.y()+Size.y()/2), scene, WallsColor);
+        }
+        if(HaveWallDOWN)
+        {
+            DrawWall(QVector2D(WorldPosition.x()-Size.x()/2, WorldPosition.y()+Size.y()/2), QVector2D(WorldPosition.x()+Size.x()/2, WorldPosition.y()+Size.y()/2), scene, WallsColor);
+        }
+        Is2DDraw = true;
+        //scene->update();
+    }
+}
+
 void Room::InitColliders()
 {
     collision = Collision();
@@ -99,10 +120,10 @@ void Room::InitColliders()
         collision.vertices.push_back({QVector2D(- Size.x() / 2 , + Size.y() / 2), QVector2D(- Size.x() / 2 , - Size.y() / 2)});
 }
 
-void Room::DrawWall(QVector2D p1,QVector2D p2, QGraphicsScene *scene, Qt::GlobalColor color)
+void Room::DrawWall(QVector2D p1,QVector2D p2, QGraphicsScene *scene, QVector3D color)
 {
     QGraphicsLineItem * Wall = new QGraphicsLineItem(p1.x(), p1.y(), p2.x(), p2.y());
-    Wall->setPen(QPen(color, 5));
+    Wall->setPen(QPen(QColor(color.x()*255, color.y()*255, color.z()*255), 5));
     scene->addItem(Wall);
 }
 

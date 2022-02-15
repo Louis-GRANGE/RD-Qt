@@ -45,7 +45,7 @@ public:
     Room *GetRoomAtPos(QVector2D pos);
 
     template <class T>
-    Room *GetRoom(T value);
+    Room *GetRoomOnPosition(T value);
 
     //GET RANDOM
     int GetRandomInRange(int min, int max);

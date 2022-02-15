@@ -5,9 +5,6 @@
 
 Labyrinthe::Labyrinthe(QGraphicsView * _view, QVector2D size)
 {
-    //Reload random seed with current time
-    srand((int) time(0));
-
     Size = size;
     view = _view;
     scene = new QGraphicsScene();
@@ -57,7 +54,7 @@ Labyrinthe::Labyrinthe(QGraphicsView * _view, QVector2D size)
         }
     }
 
-    view = new QGraphicsView(scene);
+    view->setScene(scene);
     view->show();
 }
 
@@ -209,7 +206,7 @@ std::vector<Room*> Labyrinthe::GetAllNextToRoomNoVisited(Room* current)
 }
 
 template<>
-Room *Labyrinthe::GetRoom<QVector3D>(QVector3D value)
+Room *Labyrinthe::GetRoomOnPosition<QVector3D>(QVector3D value)
 {
     int i = value.x()/RoomSizeInit.x();
     int j = value.z()/RoomSizeInit.y();
@@ -217,7 +214,7 @@ Room *Labyrinthe::GetRoom<QVector3D>(QVector3D value)
 }
 
 template<>
-Room *Labyrinthe::GetRoom<QVector2D>(QVector2D value)
+Room *Labyrinthe::GetRoomOnPosition<QVector2D>(QVector2D value)
 {
     int i = value.x()/RoomSizeInit.x();
     int j = value.y()/RoomSizeInit.y();

@@ -1,5 +1,6 @@
 #include "cplayer.h"
 #include "collision.h"
+#include "scenemanager.h"
 
 CPlayer::CPlayer()
 {
@@ -8,7 +9,7 @@ CPlayer::CPlayer()
     //Active Update function
     IsTickEnable = true;
 
-    drawObject.data = getDataMesh("D:/Documents/Document/Ynov/RD/RD-Qt/RD/Resources/Cube.obj");
+    drawObject.data = getDataMesh("Cube.obj");
 }
 
 CPlayer::CPlayer(Camera* cam)
@@ -40,7 +41,8 @@ void CPlayer::Move(QVector3D newMovement)
 
     PlayerCamera->transform.rotation = PlayerCamera->IsTopView ? PlayerCamera->Offset.rotation : transform.rotation + PlayerCamera->Offset.rotation;
 
-    qDebug() << QDir::currentPath();
+    //Draw wall on scene
+    Singleton<SceneManager>::getInstance().LabyrintheRef->GetRoomOnPosition(transform.position)->DrawRoom2D(Singleton<SceneManager>::getInstance().LabyrintheRef->scene);
 }
 
 void CPlayer::Update()
