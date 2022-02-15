@@ -9,6 +9,7 @@
 #include "cplayer.h"
 #include "testcollision.h"
 #include "collision.h"
+#include "cinputcontroller.h"
 
 
 GLDisplayWidget::GLDisplayWidget(QWidget *parent) : QGLWidget(parent)//, _X(0), _Y(0), _Z(-10), _RX(0), _RY(0), _RZ(0)
@@ -40,6 +41,7 @@ void GLDisplayWidget::initializeGL()
 
     // 2D collision tests
     testcollision mytest = testcollision();
+    CInputController mytestcontroller = CInputController();
     //qDebug() << mytest.SquareMultiLineIntersect(QVector2D(-1,-1),QVector2D(1,1));
 }
 
@@ -83,22 +85,23 @@ void GLDisplayWidget::paintGL(){
     //player->ActualizeTransform(player->inputController.KeyControl());
     foreach(CObject* object, Singleton<GLDisplayWidget>::getInstance().assets) //Never use JUSTE "assets" because it's a wrong access to the SINGLETON
     {
+        bool collided = false;
         if(object->collision.myCollisionType == CollisionType::Dynamic)
         {
-            bool collided = false;
+            QVector3D movementToVerify = Singleton<GLDisplayWidget>::getInstance().MainPlayer->inputController.KeyControl(Singleton<GLDisplayWidget>::getInstance().MainPlayer);
             foreach(CObject* targetObject, Singleton<GLDisplayWidget>::getInstance().assets)
             {
-                if(targetObject != object && object->collision.checkCollision(QVector3D(0,0,0),
+                if(targetObject != object && object->collision.checkCollision(movementToVerify,
                                              targetObject->collision,
-                                             QVector2D(object->transform.position.x(), object->transform.position.z()),
+                                             QVector2D(object->transform.position.x() + movementToVerify.x(), object->transform.position.z() + movementToVerify.z()),
                                              QVector2D(targetObject->transform.position.x(), targetObject->transform.position.z())))
                     collided = true;
             }
-            qDebug() << collided;
+            //qDebug() << collided;
         }
 
         DrawByObject(object);
-        if(object->IsTickEnable)
+        if(object->IsTickEnable && !collided)
             object->Update();
     }
 }
