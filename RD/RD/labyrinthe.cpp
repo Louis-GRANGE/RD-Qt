@@ -54,6 +54,7 @@ Labyrinthe::Labyrinthe(QGraphicsView * _view, QVector2D size)
         for(int y = 0; y < Size.y(); y++)
         {
             MazeRooms[x][y]->DrawRoom(scene);
+            MazeRooms[x][y]->InitColliders();
         }
     }
 

@@ -13,6 +13,7 @@ class Room : CObject
 public:
     Room(QVector2D size, QVector2D position);
     void DrawRoom(QGraphicsScene *scene);
+    void InitColliders();
 
     // 3D Edit mesh of CObject
     void EditMeshRoom3D(QGraphicsScene *scene);

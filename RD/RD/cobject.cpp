@@ -2,6 +2,7 @@
 #include <QFile>
 #include <QTextStream>
 #include <iostream>
+#include "collision.h"
 
 CObject::CObject()
 {

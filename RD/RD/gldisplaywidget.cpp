@@ -7,6 +7,8 @@
 #include <filesystem>
 #include "fstream"
 #include "cplayer.h"
+#include "testcollision.h"
+#include "collision.h"
 
 
 GLDisplayWidget::GLDisplayWidget(QWidget *parent) : QGLWidget(parent)//, _X(0), _Y(0), _Z(-10), _RX(0), _RY(0), _RZ(0)
@@ -35,6 +37,10 @@ void GLDisplayWidget::initializeGL()
     {
         object->Start();
     }
+
+    // 2D collision tests
+    testcollision mytest = testcollision();
+    //qDebug() << mytest.SquareMultiLineIntersect(QVector2D(-1,-1),QVector2D(1,1));
 }
 
 void GLDisplayWidget::paintGL(){
@@ -46,7 +52,7 @@ void GLDisplayWidget::paintGL(){
 
     // Rotation
 
-        qDebug() << "CAM X POS   : " << Singleton<GLDisplayWidget>::getInstance().MainPlayer->PlayerCamera->transform.position.x();
+        //qDebug() << "CAM X POS   : " << Singleton<GLDisplayWidget>::getInstance().MainPlayer->PlayerCamera->transform.position.x();
         glRotatef(Singleton<GLDisplayWidget>::getInstance().MainPlayer->PlayerCamera->transform.rotation.y(), 0, 1, 0);
         glRotatef(Singleton<GLDisplayWidget>::getInstance().MainPlayer->PlayerCamera->transform.rotation.x(), 1, 0, 0);
         glRotatef(Singleton<GLDisplayWidget>::getInstance().MainPlayer->PlayerCamera->transform.rotation.z(), 0, 0, 1);
@@ -77,6 +83,20 @@ void GLDisplayWidget::paintGL(){
     //player->ActualizeTransform(player->inputController.KeyControl());
     foreach(CObject* object, Singleton<GLDisplayWidget>::getInstance().assets) //Never use JUSTE "assets" because it's a wrong access to the SINGLETON
     {
+        if(object->collision.myCollisionType == CollisionType::Dynamic)
+        {
+            bool collided = false;
+            foreach(CObject* targetObject, Singleton<GLDisplayWidget>::getInstance().assets)
+            {
+                if(targetObject != object && object->collision.checkCollision(QVector3D(0,0,0),
+                                             targetObject->collision,
+                                             QVector2D(object->transform.position.x(), object->transform.position.z()),
+                                             QVector2D(targetObject->transform.position.x(), targetObject->transform.position.z())))
+                    collided = true;
+            }
+            qDebug() << collided;
+        }
+
         DrawByObject(object);
         if(object->IsTickEnable)
             object->Update();
@@ -154,20 +174,17 @@ void GLDisplayWidget::mouseMoveEvent(QMouseEvent *event)
     int dx = event->x() - _lastPosMouse.x();
     int dy = event->y() - _lastPosMouse.y();
 
-    if( event != NULL)
+    if( event != NULL )
     {
         float sensitivity = 0.01f;
         dx *= sensitivity;
         dy *= sensitivity;
 
-        if(!Singleton<GLDisplayWidget>::getInstance().MainPlayer->PlayerCamera->IsTopView)
-        {
-            //float yaw = Camera->rotation.x() + dy;
-            float pitch = Singleton<GLDisplayWidget>::getInstance().MainPlayer->transform.rotation.y() + dx;
+        //float yaw = Camera->rotation.x() + dy;
+        float pitch = Singleton<GLDisplayWidget>::getInstance().MainPlayer->transform.rotation.y() + dx;
 
-            //Camera->rotation.setX(yaw);
-            Singleton<GLDisplayWidget>::getInstance().MainPlayer->transform.rotation.setY(pitch);
-        }
+        //Camera->rotation.setX(yaw);
+        Singleton<GLDisplayWidget>::getInstance().MainPlayer->transform.rotation.setY(pitch);
 
         updateGL();
     }

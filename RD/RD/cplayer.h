@@ -12,7 +12,7 @@ public:
     CInputController inputController;
     Camera* PlayerCamera;
 
-    void ActualizeTransform(QVector3D newMovement);
+    void Move(QVector3D newMovement);
 
     void Update();
 };

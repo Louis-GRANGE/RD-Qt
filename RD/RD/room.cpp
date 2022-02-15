@@ -1,4 +1,5 @@
 #include "room.h"
+#include "collision.h"
 
 Room::Room(QVector2D size, QVector2D position)
 {
@@ -24,6 +25,7 @@ Room::Room(QVector2D size, QVector2D position)
     std::vector<QVector3D> colors = {QVector3D(1,0.8,0), QVector3D(1,0.8,0)};
 
     drawObject.data = {vertices, triangles, colors};
+
 }
 
 void Room::DrawRoom(QGraphicsScene *scene)
@@ -70,6 +72,24 @@ void Room::DrawRoom(QGraphicsScene *scene)
     }
 
     scene->addItem(rect);*/
+
+    InitColliders();
+}
+
+void Room::InitColliders()
+{
+    collision = Collision();
+    collision.myCollisionType = CollisionType::Static;
+    collision.myColliderType = ColliderType::MultiLine;
+
+    if(HaveWallUP)
+        collision.vertices.push_back({QVector2D(- Size.x() / 2 , - Size.y() / 2), QVector2D(+ Size.x() / 2 , - Size.y() / 2)});
+    if(HaveWallRIGHT)
+        collision.vertices.push_back({QVector2D(+ Size.x() / 2 , - Size.y() / 2), QVector2D(+ Size.x() / 2 , + Size.y() / 2)});
+    if(HaveWallDOWN)
+        collision.vertices.push_back({QVector2D(+ Size.x() / 2 , - Size.y() / 2), QVector2D(+ Size.x() / 2 , + Size.y() / 2)});
+    if(HaveWallLEFT)
+        collision.vertices.push_back({QVector2D(- Size.x() / 2 , + Size.y() / 2), QVector2D(- Size.x() / 2 , - Size.y() / 2)});
 }
 
 void Room::DrawWall(QVector2D p1,QVector2D p2, QGraphicsScene *scene, Qt::GlobalColor color)

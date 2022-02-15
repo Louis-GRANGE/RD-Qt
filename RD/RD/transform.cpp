@@ -14,6 +14,7 @@ Transform::Transform(QVector3D pos, QVector3D rot)
 void Transform::Move(QVector3D direction)
 {
     position += direction;
+
 }
 
 void Transform::Rotation(QVector3D direction)
