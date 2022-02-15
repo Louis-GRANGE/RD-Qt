@@ -13,6 +13,11 @@ CObject::CObject()
     Singleton<GLDisplayWidget>::getInstance().AddCObject(this);
 }
 
+CObject::~CObject()
+{
+    //transform.Move(QVector3D(100,100,100));
+}
+
 modele CObject::getDataMesh(QString path)
 {
     modele toReturn;
@@ -66,3 +71,4 @@ modele CObject::getDataMesh(QString path)
             return toReturn;
         }
 }
+

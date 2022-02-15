@@ -16,10 +16,10 @@ Room::Room(QVector2D size, QVector2D position)
         QVector3D(- Size.x() / 2, 0, + Size.y() / 2), //BOTTOM LEFT
         QVector3D(+ Size.x() / 2, 0, + Size.y() / 2), //BOTTOM RIGHT
         //UP for Walls
-        QVector3D(- Size.x() / 2, 1 , - Size.y() / 2), //UP TOP LEFT
-        QVector3D(+ Size.x() / 2, 1 , - Size.y() / 2), //UP TOP RIGHT
-        QVector3D(- Size.x() / 2, 1 , + Size.y() / 2), //UP BOTTOM LEFT
-        QVector3D(+ Size.x() / 2, 1 , + Size.y() / 2)  //UP BOTTOM RIGHT
+        QVector3D(- Size.x() / 2, 6 , - Size.y() / 2), //UP TOP LEFT
+        QVector3D(+ Size.x() / 2, 6 , - Size.y() / 2), //UP TOP RIGHT
+        QVector3D(- Size.x() / 2, 6 , + Size.y() / 2), //UP BOTTOM LEFT
+        QVector3D(+ Size.x() / 2, 6 , + Size.y() / 2)  //UP BOTTOM RIGHT
     };
     std::vector<int> triangles = {1, 2, 4, 1, 4, 3};
 

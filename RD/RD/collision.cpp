@@ -35,7 +35,7 @@ bool Collision::checkCollision(QVector3D newMovement, Collision target, QVector2
     case ColliderType::Box:
         switch (target.myColliderType){
             case ColliderType::MultiLine:
-                return myTestCollision.SquareMultiLineIntersect(QVector2D(min.x() + pos.x(), min.z()+ pos.y()),
+                return myTestCollision.SquareMultiLineIntersect(QVector2D(min.x() + pos.x(), min.z() + pos.y()),
                                                                 QVector2D(max.x() + pos.x(), max.z() + pos.y()),
                                                                 target.vertices, targetpos);
                 break;
