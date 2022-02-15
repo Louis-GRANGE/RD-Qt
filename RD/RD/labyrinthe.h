@@ -27,6 +27,7 @@ public:
     std::vector<Room*> Maze;
     QGraphicsScene * scene;
     QGraphicsView * view;
+    QVector2D RoomSizeInit = {25, 25};
 
     Room* GetRoomAt(QVector2D pos);
     bool HaveNextToRoomWithAllWalls(Room* current);
@@ -42,6 +43,9 @@ public:
     void RemoveByDir(QVector2D pos, direction dir);
     std::vector<Room *> GetAllNextToRoom(QVector2D pos);
     Room *GetRoomAtPos(QVector2D pos);
+
+    template <class T>
+    Room *GetRoom(T value);
 
     //GET RANDOM
     int GetRandomInRange(int min, int max);

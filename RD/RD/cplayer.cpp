@@ -7,6 +7,8 @@ CPlayer::CPlayer()
 
     //Active Update function
     IsTickEnable = true;
+
+    drawObject.data = getDataMesh("D:/Documents/Document/Ynov/RD/RD-Qt/RD/Resources/Cube.obj");
 }
 
 CPlayer::CPlayer(Camera* cam)
@@ -27,7 +29,8 @@ CPlayer::CPlayer(Camera* cam)
     collision.min = QVector3D(1, 0, - 1);
     collision.max = QVector3D(3, 0, + 1);
 
-    drawObject.data = getDataMesh("D:/Documents/Document/Ynov/RD/RD-Qt/RD/Resources/Cube.obj");
+    drawObject.data = getDataMesh("Cube.obj");
+
 }
 
 void CPlayer::Move(QVector3D newMovement)
@@ -36,6 +39,8 @@ void CPlayer::Move(QVector3D newMovement)
     PlayerCamera->transform.position = transform.position + PlayerCamera->Offset.position;
 
     PlayerCamera->transform.rotation = PlayerCamera->IsTopView ? PlayerCamera->Offset.rotation : transform.rotation + PlayerCamera->Offset.rotation;
+
+    qDebug() << QDir::currentPath();
 }
 
 void CPlayer::Update()

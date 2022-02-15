@@ -12,7 +12,6 @@ Labyrinthe::Labyrinthe(QGraphicsView * _view, QVector2D size)
     view = _view;
     scene = new QGraphicsScene();
     //lRoom = new QList<Room>();
-    QVector2D RoomSizeInit = QVector2D(25, 25);
 
     Room* Current;
 
@@ -207,4 +206,20 @@ std::vector<Room*> Labyrinthe::GetAllNextToRoomNoVisited(Room* current)
     }
 
     return lAllRooms;
+}
+
+template<>
+Room *Labyrinthe::GetRoom<QVector3D>(QVector3D value)
+{
+    int i = value.x()/RoomSizeInit.x();
+    int j = value.z()/RoomSizeInit.y();
+    return MazeRooms[i][j];
+}
+
+template<>
+Room *Labyrinthe::GetRoom<QVector2D>(QVector2D value)
+{
+    int i = value.x()/RoomSizeInit.x();
+    int j = value.y()/RoomSizeInit.y();
+    return MazeRooms[i][j];
 }

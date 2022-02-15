@@ -22,7 +22,7 @@ modele CObject::getDataMesh(QString path)
 
     std::vector<QVector3D> colors = {QVector3D(1,1,1)};
 
-    QFile file(path);
+    QFile file(QDir::currentPath() + "/Ressources/" + path);
         if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
         {
             vertices = {
