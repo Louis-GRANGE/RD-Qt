@@ -13,7 +13,7 @@ public:
     bool SquareLineIntersect(QVector2D Sqrmin, QVector2D Sqrmax, QVector2D LnA, QVector2D LnB);
     bool MultiLinesIntersect(std::vector<std::vector<QVector2D>> vertices1, std::vector<std::vector<QVector2D>> vertices2,
                              QVector2D posV1, QVector2D posV2);
-    bool testcollision::SquareMultiLineIntersect(QVector2D Sqrmin, QVector2D Sqrmax,std::vector<std::vector<QVector2D>> vertices1,
+    bool SquareMultiLineIntersect(QVector2D Sqrmin, QVector2D Sqrmax,std::vector<std::vector<QVector2D>> vertices1,
                                                  QVector2D posV1);
 };
 

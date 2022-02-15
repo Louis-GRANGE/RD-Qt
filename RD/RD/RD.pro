@@ -1,7 +1,7 @@
 QT      += core gui widgets
 QT      += opengl
 
-LIBS += User32.lib
+#LIBS += User32.lib
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 CONFIG += c++11
@@ -16,6 +16,7 @@ SOURCES += \
     cdrawobject.cpp \
     cinputcontroller.cpp \
     cobject.cpp \
+    collectable.cpp \
     collision.cpp \
     complexcollision.cpp \
     cplayer.cpp \
@@ -36,6 +37,7 @@ HEADERS += \
     cdrawobject.h \
     cinputcontroller.h \
     cobject.h \
+    collectable.h \
     collision.h \
     complexcollision.h \
     cplayer.h \

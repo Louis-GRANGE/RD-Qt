@@ -10,9 +10,9 @@ public:
     bool IsTopView = false;
     void ToggleView();
 
-    Transform TopViewOffset{ QVector3D(0, 20, 0), QVector3D(0, 90, 90)};
-    Transform FPSViewOffset{ QVector3D(0, 5, 0), QVector3D(0, 0, 0)};
-    Transform Offset = TopViewOffset;
+    Transform TopViewOffset{ QVector3D(5, 20, 0), QVector3D(0, 90, 90)};
+    Transform FPSViewOffset{ QVector3D(5, 5, 0), QVector3D(0, 0, 0)};
+    Transform Offset = FPSViewOffset;
 };
 
 #endif // CAMERA_H

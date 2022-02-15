@@ -1,5 +1,6 @@
 #include "room.h"
 #include "collision.h"
+#include "collectable.h"
 
 Room::Room(QVector2D size, QVector2D position)
 {
@@ -10,15 +11,15 @@ Room::Room(QVector2D size, QVector2D position)
 
     //Singleton<GLDisplayWidget>::getInstance().AddCObject(this);
     std::vector<QVector3D> vertices = {
-        QVector3D(- Size.x() / 2, -10, - Size.y() / 2), //TOP LEFT
-        QVector3D(+ Size.x() / 2, -10, - Size.y() / 2), //TOP RIGHT
-        QVector3D(- Size.x() / 2, -10, + Size.y() / 2), //BOTTOM LEFT
-        QVector3D(+ Size.x() / 2, -10, + Size.y() / 2), //BOTTOM RIGHT
+        QVector3D(- Size.x() / 2, 0, - Size.y() / 2), //TOP LEFT
+        QVector3D(+ Size.x() / 2, 0, - Size.y() / 2), //TOP RIGHT
+        QVector3D(- Size.x() / 2, 0, + Size.y() / 2), //BOTTOM LEFT
+        QVector3D(+ Size.x() / 2, 0, + Size.y() / 2), //BOTTOM RIGHT
         //UP for Walls
-        QVector3D(- Size.x() / 2, -1 , - Size.y() / 2), //UP TOP LEFT
-        QVector3D(+ Size.x() / 2, -1 , - Size.y() / 2), //UP TOP RIGHT
-        QVector3D(- Size.x() / 2, -1 , + Size.y() / 2), //UP BOTTOM LEFT
-        QVector3D(+ Size.x() / 2, -1 , + Size.y() / 2)  //UP BOTTOM RIGHT
+        QVector3D(- Size.x() / 2, 1 , - Size.y() / 2), //UP TOP LEFT
+        QVector3D(+ Size.x() / 2, 1 , - Size.y() / 2), //UP TOP RIGHT
+        QVector3D(- Size.x() / 2, 1 , + Size.y() / 2), //UP BOTTOM LEFT
+        QVector3D(+ Size.x() / 2, 1 , + Size.y() / 2)  //UP BOTTOM RIGHT
     };
     std::vector<int> triangles = {1, 2, 4, 1, 4, 3};
 
@@ -26,6 +27,12 @@ Room::Room(QVector2D size, QVector2D position)
 
     drawObject.data = {vertices, triangles, colors};
 
+
+    if(rand() % 3 == 0)
+    {
+        Collectable* col = new Collectable();
+        col->transform.position = transform.position + QVector3D(0,2,0);
+    }
 }
 
 void Room::DrawRoom(QGraphicsScene *scene)
