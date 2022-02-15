@@ -89,15 +89,24 @@ void GLDisplayWidget::paintGL(){
         if(object->collision.myCollisionType == CollisionType::Dynamic)
         {
             QVector3D movementToVerify = Singleton<GLDisplayWidget>::getInstance().MainPlayer->inputController.KeyControl(Singleton<GLDisplayWidget>::getInstance().MainPlayer);
-            foreach(CObject* targetObject, Singleton<GLDisplayWidget>::getInstance().assets)
+            //foreach(CObject* targetObject, Singleton<GLDisplayWidget>::getInstance().assets)
+            for(int i = 0; i < Singleton<GLDisplayWidget>::getInstance().assets.size(); i++)
             {
+                CObject* targetObject = Singleton<GLDisplayWidget>::getInstance().assets[i];
                 if(targetObject != object && object->collision.checkCollision(movementToVerify,
                                              targetObject->collision,
                                              QVector2D(object->transform.position.x() + movementToVerify.x(), object->transform.position.z() + movementToVerify.z()),
-                                             QVector2D(targetObject->transform.position.x(), targetObject->transform.position.z())))
-                    collided = true;
+                                             QVector2D(targetObject->transform.position.x(), targetObject->transform.position.z()))){
+                    if(targetObject->collision.myCollisionType != CollisionType::Trigger)
+                        collided = true;
+                    else
+                    {
+                        Singleton<GLDisplayWidget>::getInstance().assets.erase(Singleton<GLDisplayWidget>::getInstance().assets.begin() + i);
+                    }
+
+                }
             }
-            //qDebug() << collided;
+            //qDebug() << movementToVerify;
         }
 
         DrawByObject(object);

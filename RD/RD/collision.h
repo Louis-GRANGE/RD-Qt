@@ -8,7 +8,8 @@
 enum class CollisionType
   {
      Static,
-     Dynamic
+     Dynamic,
+     Trigger
   };
 
 enum class ColliderType

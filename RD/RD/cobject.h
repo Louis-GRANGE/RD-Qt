@@ -9,6 +9,7 @@ class CObject
 {
 public:
     CObject();
+    ~CObject();
     bool IsTickEnable = false;
     Transform transform;
     Collision collision;

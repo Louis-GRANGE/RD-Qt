@@ -10,6 +10,7 @@ class cDrawObject
 {
 public:
     cDrawObject();
+    ~cDrawObject();
     cDrawObject(modele _data);
     modele data;
 };
