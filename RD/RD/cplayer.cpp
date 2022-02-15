@@ -18,14 +18,14 @@ CPlayer::CPlayer(Camera* cam)
     //Active Update function
     IsTickEnable = true;
 
-    transform.scale = QVector3D(0.1f,0.1f,0.1f);
+    transform.scale = QVector3D(0.05f,0.05f,0.05f);
     transform.position = {5,-5,7};
 
     collision = Collision();
     collision.myCollisionType = CollisionType::Dynamic;
     collision.myColliderType = ColliderType::Box;
-    collision.min = QVector3D(transform.position.x() - 1, 0,transform.position.z() - 1);
-    collision.max = QVector3D(transform.position.x() + 1, 0,transform.position.z() + 1);
+    collision.min = QVector3D(1, 0, - 1);
+    collision.max = QVector3D(3, 0, + 1);
 
     drawObject.data = getDataMesh("D:/Documents/Document/Ynov/RD/RD-Qt/RD/Resources/Cube.obj");
 }

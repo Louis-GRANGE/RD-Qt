@@ -94,7 +94,7 @@ void Room::InitColliders()
     if(HaveWallRIGHT)
         collision.vertices.push_back({QVector2D(+ Size.x() / 2 , - Size.y() / 2), QVector2D(+ Size.x() / 2 , + Size.y() / 2)});
     if(HaveWallDOWN)
-        collision.vertices.push_back({QVector2D(+ Size.x() / 2 , - Size.y() / 2), QVector2D(+ Size.x() / 2 , + Size.y() / 2)});
+        collision.vertices.push_back({QVector2D(+ Size.x() / 2 , + Size.y() / 2), QVector2D(- Size.x() / 2 , + Size.y() / 2)});
     if(HaveWallLEFT)
         collision.vertices.push_back({QVector2D(- Size.x() / 2 , + Size.y() / 2), QVector2D(- Size.x() / 2 , - Size.y() / 2)});
 }

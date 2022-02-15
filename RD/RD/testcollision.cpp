@@ -68,13 +68,13 @@ bool testcollision::MultiLinesIntersect(std::vector<std::vector<QVector2D>> vert
 
 bool testcollision::SquareLineIntersect(QVector2D Sqrmin, QVector2D Sqrmax, QVector2D LnA, QVector2D LnB)
 {
-    if(LinesIntersect(QVector2D(Sqrmin.x(), Sqrmin.y()), QVector2D(Sqrmax.x(), Sqrmin.y()), LnA, LnB))
+    if(LinesIntersect(QVector2D(Sqrmin.x(), Sqrmin.y()), QVector2D(Sqrmax.x(), Sqrmin.y()), LnA, LnB)) // Bottom
         return true;
-    if(LinesIntersect(QVector2D(Sqrmax.x(), Sqrmin.y()), QVector2D(Sqrmax.x(), Sqrmax.y()), LnA, LnB))
+    if(LinesIntersect(QVector2D(Sqrmax.x(), Sqrmin.y()), QVector2D(Sqrmax.x(), Sqrmax.y()), LnA, LnB)) // Right
         return true;
-    if(LinesIntersect(QVector2D(Sqrmax.x(), Sqrmax.y()), QVector2D(Sqrmin.x(), Sqrmax.y()), LnA, LnB))
+    if(LinesIntersect(QVector2D(Sqrmax.x(), Sqrmax.y()), QVector2D(Sqrmin.x(), Sqrmax.y()), LnA, LnB)) // Top
         return true;
-    if(LinesIntersect(QVector2D(Sqrmin.x(), Sqrmax.y()), QVector2D(Sqrmin.x(), Sqrmin.y()), LnA, LnB))
+    if(LinesIntersect(QVector2D(Sqrmin.x(), Sqrmax.y()), QVector2D(Sqrmin.x(), Sqrmin.y()), LnA, LnB)) // Left
         return true;
 
     return false;
