@@ -8,6 +8,7 @@ Labyrinthe::Labyrinthe(QGraphicsView * _view, QVector2D size)
     Size = size;
     view = _view;
     scene = new QGraphicsScene();
+    DrawPointPlayerPlace();
     //lRoom = new QList<Room>();
 
     Room* Current;
@@ -174,6 +175,19 @@ Room* Labyrinthe::GetRoomAtPos(QVector2D pos)
 int Labyrinthe::GetRandomInRange(int min, int max)
 {
     return rand() % max + min;
+}
+
+void Labyrinthe::DrawPointPlayerPlace()
+{
+    PlayerPos = new QGraphicsLineItem(0, 0, 0, 0);
+    PlayerPos->setPos(0, 0);
+    PlayerPos->setPen(QPen(QColor(255, 0, 0), 5));
+    scene->addItem(PlayerPos);
+}
+
+void Labyrinthe::UpdatePlayerPosIn2D(QVector2D pos)
+{
+    PlayerPos->setPos(pos.x(), pos.y());
 }
 
 std::vector<Room*> Labyrinthe::GetAllNextToRoom(QVector2D pos)

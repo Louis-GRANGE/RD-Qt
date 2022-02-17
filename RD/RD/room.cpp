@@ -85,8 +85,7 @@ void Room::DrawRoom2D(QGraphicsScene *scene)
     {
         if(HaveWallUP)
         {
-            DrawWall(QVector2D(WorldPosition.x()-Size.x()/2, WorldPosition.y()-Size.y()/2), QVector2D(WorldPosition.x()+Size.x()/2, WorldPosition.y()-Size.y()/2), scene, WallsColor);
-        }
+            DrawWall(QVector2D(WorldPosition.x()-Size.x()/2, WorldPosition.y()-Size.y()/2), QVector2D(WorldPosition.x()+Size.x()/2, WorldPosition.y()-Size.y()/2), scene, WallsColor);        }
         if(HaveWallLEFT)
         {
             DrawWall(QVector2D(WorldPosition.x()-Size.x()/2, WorldPosition.y()-Size.y()/2), QVector2D(WorldPosition.x()-Size.x()/2, WorldPosition.y()+Size.y()/2), scene, WallsColor);
@@ -123,6 +122,7 @@ void Room::InitColliders()
 void Room::DrawWall(QVector2D p1,QVector2D p2, QGraphicsScene *scene, QVector3D color)
 {
     QGraphicsLineItem * Wall = new QGraphicsLineItem(p1.x(), p1.y(), p2.x(), p2.y());
+
     Wall->setPen(QPen(QColor(color.x()*255, color.y()*255, color.z()*255), 5));
     scene->addItem(Wall);
 }

@@ -43,6 +43,7 @@ void CPlayer::Move(QVector3D newMovement)
 
     //Draw wall on scene
     Singleton<SceneManager>::getInstance().LabyrintheRef->GetRoomOnPosition(transform.position)->DrawRoom2D(Singleton<SceneManager>::getInstance().LabyrintheRef->scene);
+    Singleton<SceneManager>::getInstance().LabyrintheRef->UpdatePlayerPosIn2D(QVector2D(transform.position.x(), transform.position.z()));
 }
 
 void CPlayer::Update()

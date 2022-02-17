@@ -27,6 +27,8 @@ public:
     std::vector<Room*> Maze;
     QGraphicsScene * scene;
     QGraphicsView * view;
+    QGraphicsLineItem * PlayerPos;
+
     QVector2D RoomSizeInit = {25, 25};
 
     Room* GetRoomAt(QVector2D pos);
@@ -52,6 +54,9 @@ public:
 
     //to delete
     int* nbLoop = new int(0);
+
+    void DrawPointPlayerPlace();
+    void UpdatePlayerPosIn2D(QVector2D pos);
 };
 
 #endif // LABYRINTHE_H
